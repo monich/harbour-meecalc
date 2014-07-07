@@ -128,13 +128,19 @@ void CalcEngine::clear()
     updateText();
 }
 
+double CalcEngine::currentNumber() const
+{
+    double x = ((double)iNumerator/(double)iDenominator);
+    return iMinus ? (-x) : x;
+}
+
 void CalcEngine::digit(int aDigit)
 {
     QDEBUG(aDigit);
 
     if (iNewInput || !iSelectedOp.isEmpty()) {
         // We started typing new number
-        iLeft = ((double)iNumerator/(double)iDenominator);
+        iLeft = currentNumber();
         iNumerator = 0;
         iDenominator = 1;
         iPrecision = -1;
@@ -145,7 +151,7 @@ void CalcEngine::digit(int aDigit)
     }
 
     // Check for overflow
-    int64_t num = iNumerator * 10 + aDigit;
+    quint64 num = iNumerator * 10 + aDigit;
     if ((num-aDigit)/10 != iNumerator) {
         QDEBUG("overflow");
         emit oops();
@@ -238,7 +244,7 @@ void CalcEngine::enter()
         iPendingOp.clear();
     } else if (!iSelectedOp.isEmpty()) {
         QDEBUG("performing selected operation");
-        iLeft = ((double)iNumerator/(double)iDenominator);
+        iLeft = currentNumber();
         perform(iSelectedOp);
         resetSelectedOp();
     } else {
@@ -248,8 +254,7 @@ void CalcEngine::enter()
 
 void CalcEngine::perform(QString aOperation)
 {
-    double result, right = ((double)iNumerator/(double)iDenominator);
-    if (iMinus) right = (-right);
+    double result, right = currentNumber();
     if (aOperation == OP_DIVIDE) {
         if (right == 0.0) {
             QDEBUG("division by zero");
@@ -300,8 +305,8 @@ void CalcEngine::perform(QString aOperation)
         }
         iNumerator = (quint64)ipart;
         iMinus = minus;
-        QDEBUG((minus ? '-' : '+') << iNumerator << "/" << iDenominator <<
-            "(" << iPrecision << ")");
+        QDEBUG("(" << iPrecision << ")" << (minus ? '-' : '+') <<
+            iNumerator << "/" << iDenominator);
         updateText();
         iNewInput = true;
     }

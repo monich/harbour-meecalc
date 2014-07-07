@@ -65,6 +65,7 @@ public:
     QString text() const;
 
 private:
+    double currentNumber() const;
     void perform(QString aOperation);
     void setSelectedOp(QString aOperation);
     void resetSelectedOp() { setSelectedOp(""); }
