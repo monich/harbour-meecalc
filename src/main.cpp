@@ -28,10 +28,15 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "CalcEngine.h"
+
+#include <sailfishapp.h>
+
 #include <QtGui>
 #include <QtQuick>
-#include <sailfishapp.h>
-#include "CalcEngine.h"
+#include <QPluginLoader>
+
+Q_IMPORT_PLUGIN(SvgPlugin)
 
 int main(int argc, char *argv[])
 {
