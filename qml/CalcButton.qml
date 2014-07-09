@@ -41,7 +41,6 @@ MouseArea {
 
     property color normalColor: "white"
     property color pressedColor: "black"
-    property bool pressedState:  button.pressed || selected || pressAnimationActive
 
     Image {
         id: background
@@ -61,15 +60,21 @@ MouseArea {
         color: normalColor
     }
 
+    Timer {
+        id: pressTimer
+        repeat: false
+        interval: 50
+    }
+
     states: [
         State {
             name: "pressed"
-            when: pressedState
+            when: button.pressed || selected || pressTimer.running
             PropertyChanges { target: background; opacity: 1 }
         },
         State {
             name: "normal"
-            when: !pressedState
+            when: !button.pressed && !selected && !pressTimer.running
             PropertyChanges { target: background; opacity: 0 }
         }
     ]
@@ -79,10 +84,8 @@ MouseArea {
             from: "normal"
             to: "pressed"
             SequentialAnimation{
-                PropertyAction {
-                    target: button
-                    property: "pressAnimationActive"
-                    value: true
+                ScriptAction {
+                    script: pressTimer.restart()
                 }
                 PropertyAction {
                     target: buttonText
@@ -94,11 +97,6 @@ MouseArea {
                     property: "opacity"
                     easing.type: Easing.OutCubic
                     duration: 50
-                }
-                PropertyAction {
-                    target: button
-                    property: "pressAnimationActive"
-                    value: false
                 }
             }
         },
