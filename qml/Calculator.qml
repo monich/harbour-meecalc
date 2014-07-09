@@ -116,7 +116,7 @@ Item {
         }
         Row {
             spacing: gap
-            height: buttonSize + paddingLarge
+            height: buttonSize + gap
             CalcButton {
                 width: buttonSize
                 text: "\u00b1"
