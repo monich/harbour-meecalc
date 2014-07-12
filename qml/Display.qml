@@ -31,36 +31,65 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Text {
-    color: "#FF8600"
-    smooth: true
-    font.bold: true
+Item {
+    id: display
 
-    Component.onCompleted: refitText()
-    horizontalAlignment: Text.AlignRight;
-    verticalAlignment: Text.AlignVCenter;
-
+    property alias text: displayText.text
+    property color textColor: "#FF8600"
     property int minimumSize: 8
     property int maximumSize: 200
 
-    onWidthChanged: refitText()
-    onHeightChanged: refitText()
-    onTextChanged: refitText()
+    function flash() {
+        flashTimer.restart()
+    }
 
-    function refitText() {
-        if (paintedHeight > 0 && paintedWidth > 0) {
-            if (font.pixelSize % 2) font.pixelSize++
-            while (paintedWidth > width || paintedHeight > height) {
-                if ((font.pixelSize -= 2) <= minimumSize)
-                    break
-            }
-            while (paintedWidth < width && paintedHeight < height) {
-                font.pixelSize += 2
-            }
-            font.pixelSize -= 2
-            if (font.pixelSize >= maximumSize) {
-                font.pixelSize = maximumSize
-                return
+    Timer {
+        id: flashTimer
+        repeat: false
+        interval: 50
+    }
+
+    Rectangle {
+        anchors {
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+        }
+        color: flashTimer.running ? textColor : "transparent"
+        width: displayText.paintedWidth
+        height: displayText.paintedHeight
+    }
+
+    Text {
+        id: displayText
+        color: flashTimer.running ? "black" : textColor
+        anchors.fill: parent
+
+        smooth: true
+        font.bold: true
+
+        Component.onCompleted: refitText()
+        horizontalAlignment: Text.AlignRight;
+        verticalAlignment: Text.AlignVCenter;
+
+        onWidthChanged: refitText()
+        onHeightChanged: refitText()
+        onTextChanged: refitText()
+
+        function refitText() {
+            if (paintedHeight > 0 && paintedWidth > 0) {
+                if (font.pixelSize % 2) font.pixelSize++
+                while (paintedWidth > width || paintedHeight > height) {
+                    if ((font.pixelSize -= 2) <= minimumSize)
+                        break
+                }
+                while (paintedWidth < width && paintedHeight < height) {
+                    font.pixelSize += 2
+                }
+                font.pixelSize -= 2
+                if (font.pixelSize >= maximumSize) {
+                    font.pixelSize = maximumSize
+                    return
+                }
             }
         }
     }

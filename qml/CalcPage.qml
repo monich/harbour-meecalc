@@ -43,4 +43,7 @@ Page {
         anchors.centerIn: parent
         height: parent.height - 2*Theme.paddingLarge
     }
+    function oops() {
+        calculator.oops()
+    }
 }

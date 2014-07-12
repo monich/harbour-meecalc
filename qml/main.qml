@@ -37,8 +37,5 @@ ApplicationWindow {
     allowedOrientations: Orientation.Portrait
     initialPage: Component { CalcPage { engine: calcEngine } }
     cover: Qt.resolvedUrl("CalcCover.qml")
-    CalcEngine {
-        id: calcEngine
-        onOops: console.log("oops!")
-    }
+    CalcEngine { id: calcEngine }
 }

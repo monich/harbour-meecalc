@@ -44,6 +44,14 @@ Item {
 
     property int gap: paddingLarge + paddingSmall
 
+    Connections {
+        target: engine
+        onOops: {
+            console.log("oops")
+            display.flash()
+        }
+    }
+
     Item {
         anchors {
             top: parent.top

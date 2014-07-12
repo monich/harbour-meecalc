@@ -66,7 +66,7 @@ public:
 
 private:
     double currentNumber() const;
-    void perform(QString aOperation);
+    bool perform(QString aOperation);
     void setSelectedOp(QString aOperation);
     void resetSelectedOp() { setSelectedOp(""); }
     void setText(QString aText);

@@ -229,8 +229,11 @@ void CalcEngine::operation(QString aOperation)
     } else {
         if (!iPendingOp.isEmpty()) {
             QDEBUG("performing pending operation");
-            perform(iPendingOp);
-            iPendingOp.clear();
+            if (perform(iPendingOp)) {
+                iPendingOp.clear();
+            } else {
+                emit oops();
+            }
         }
         setSelectedOp(aOperation);
     }
@@ -240,26 +243,31 @@ void CalcEngine::enter()
 {
     if (!iPendingOp.isEmpty()) {
         QDEBUG("performing pending operation");
-        perform(iPendingOp);
-        iPendingOp.clear();
+        if (perform(iPendingOp)) {
+            iPendingOp.clear();
+        } else {
+            emit oops();
+        }
     } else if (!iSelectedOp.isEmpty()) {
         QDEBUG("performing selected operation");
         iLeft = currentNumber();
-        perform(iSelectedOp);
-        resetSelectedOp();
+        if (perform(iSelectedOp)) {
+            resetSelectedOp();
+        } else {
+            emit oops();
+        }
     } else {
         QDEBUG("nothing to do");
     }
 }
 
-void CalcEngine::perform(QString aOperation)
+bool CalcEngine::perform(QString aOperation)
 {
     double result, right = currentNumber();
     if (aOperation == OP_DIVIDE) {
         if (right == 0.0) {
             QDEBUG("division by zero");
-            emit oops();
-            return;
+            return false;
         }
         result = iLeft / right;
         QDEBUG(iLeft << "/" << right << "=" << result);
@@ -274,8 +282,7 @@ void CalcEngine::perform(QString aOperation)
         QDEBUG(iLeft << "+" << right << "=" << result);
     } else {
         QDEBUG("unexpected operation" << aOperation);
-        emit oops();
-        return;
+        return false;
     }
 
     bool minus = (result < 0.0);
@@ -286,6 +293,7 @@ void CalcEngine::perform(QString aOperation)
     if (str.length() > iMaxDigits) {
         QDEBUG("too many digits");
         emit oops();
+        return false;
     } else {
         str = QString::number(result, 'f', iMaxDigits-str.length());
         while (str.endsWith('0')) str = str.left(str.length()-1);
@@ -309,5 +317,6 @@ void CalcEngine::perform(QString aOperation)
             iNumerator << "/" << iDenominator);
         updateText();
         iNewInput = true;
+        return true;
     }
 }
