@@ -37,7 +37,7 @@ MouseArea {
 
     property alias text: buttonText.text
     property bool selected: false
-    property bool pressAnimationActive: false
+    property bool highlited: false
 
     property color normalColor: "white"
     property color pressedColor: "black"
@@ -50,6 +50,7 @@ MouseArea {
         fillMode: Image.PreserveAspectFit
         source: Qt.resolvedUrl("meecalc-button-background.svg")
         smooth: true
+        opacity: 0
     }
 
     Text {
@@ -60,61 +61,62 @@ MouseArea {
         color: normalColor
     }
 
-    Timer {
-        id: pressTimer
-        repeat: false
-        interval: 50
+    function updateAnimation() {
+        if (!pressAnimation.running && !releaseAnimation.running) {
+            if (button.pressed || button.selected) {
+                if (!highlited) pressAnimation.start()
+            } else {
+                if (highlited) releaseAnimation.start()
+            }
+        }
     }
 
-    states: [
-        State {
-            name: "pressed"
-            when: button.pressed || selected || pressTimer.running
-            PropertyChanges { target: background; opacity: 1 }
-        },
-        State {
-            name: "normal"
-            when: !button.pressed && !selected && !pressTimer.running
-            PropertyChanges { target: background; opacity: 0 }
-        }
-    ]
+    onPressedChanged: updateAnimation()
+    onSelectedChanged: updateAnimation()
 
-    transitions: [
-        Transition {
-            from: "normal"
-            to: "pressed"
-            SequentialAnimation{
-                ScriptAction {
-                    script: pressTimer.restart()
-                }
-                PropertyAction {
-                    target: buttonText
-                    property: "color"
-                    value: pressedColor
-                }
-                NumberAnimation {
-                    target: background
-                    property: "opacity"
-                    easing.type: Easing.OutCubic
-                    duration: 50
-                }
-            }
-        },
-        Transition {
-            from: "pressed"
-            to: "normal"
-            SequentialAnimation{
-                NumberAnimation {
-                    properties: "opacity"
-                    easing.type: Easing.InCubic
-                    duration: 50
-                }
-                PropertyAction {
-                    target: buttonText
-                    property: "color"
-                    value: normalColor
-                }
-            }
+    SequentialAnimation{
+        id: pressAnimation
+        PropertyAction {
+            target: buttonText
+            property: "color"
+            value: pressedColor
         }
-    ]
+        NumberAnimation {
+            target: background
+            property: "opacity"
+            easing.type: Easing.OutCubic
+            duration: 50
+            from: 0
+            to: 1
+        }
+        PropertyAction {
+            target: button
+            property: "highlited"
+            value: true
+        }
+        onRunningChanged: updateAnimation()
+    }
+
+    SequentialAnimation{
+        id: releaseAnimation
+        NumberAnimation {
+            target: background
+            properties: "opacity"
+            easing.type: Easing.InCubic
+            duration: 50
+            from: 1
+            to: 0
+        }
+        PropertyAction {
+            target: buttonText
+            property: "color"
+            value: normalColor
+        }
+        PropertyAction {
+            target: button
+            property: "highlited"
+            value: false
+        }
+        onRunningChanged: updateAnimation()
+    }
 }
