@@ -3,7 +3,7 @@
 ** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the Qt SVG module of the Qt Toolkit.
+** This file is part of the plugins of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,64 +38,28 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifndef QGRAPHICSSVGITEM_H
-#define QGRAPHICSSVGITEM_H
 
-#include <QtCore/qglobal.h>
+#ifndef QT_SVG_IMAGE_IO_PLUGIN
+#define QT_SVG_IMAGE_IO_PLUGIN
 
-#ifndef QT_NO_WIDGETS
-
-#include <QtWidgets/qgraphicsitem.h>
-
-#include <QtSvg/qtsvgglobal.h>
+#include <qimageiohandler.h>
+#include <qstringlist.h>
+#include <qiodevice.h>
+#include <qbytearray.h>
 
 QT_BEGIN_NAMESPACE
 
-
-class QSvgRenderer;
-class QGraphicsSvgItemPrivate;
-
-class Q_SVG_EXPORT QGraphicsSvgItem : public QGraphicsObject
+class QSvgPlugin : public QImageIOPlugin
 {
     Q_OBJECT
-    Q_INTERFACES(QGraphicsItem)
-    Q_PROPERTY(QString elementId READ elementId WRITE setElementId)
-    Q_PROPERTY(QSize maximumCacheSize READ maximumCacheSize WRITE setMaximumCacheSize)
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QImageIOHandlerFactoryInterface" FILE "svg.json")
 
 public:
-    QGraphicsSvgItem(QGraphicsItem *parentItem=0);
-    QGraphicsSvgItem(const QString &fileName, QGraphicsItem *parentItem=0);
-
-    void setSharedRenderer(QSvgRenderer *renderer);
-    QSvgRenderer *renderer() const;
-
-    void setElementId(const QString &id);
-    QString elementId() const;
-
-    void setCachingEnabled(bool);
-    bool isCachingEnabled() const;
-
-    void setMaximumCacheSize(const QSize &size);
-    QSize maximumCacheSize() const;
-
-    virtual QRectF boundingRect() const;
-
-    virtual void paint(QPainter *painter,
-                       const QStyleOptionGraphicsItem *option,
-                       QWidget *widget=0);
-
-    enum { Type = 13 };
-    virtual int type() const;
-
-private:
-    Q_DISABLE_COPY(QGraphicsSvgItem)
-    Q_DECLARE_PRIVATE_D(QGraphicsItem::d_ptr.data(), QGraphicsSvgItem)
-
-    Q_PRIVATE_SLOT(d_func(), void _q_repaintItem())
+    QStringList keys() const;
+    Capabilities capabilities(QIODevice *device, const QByteArray &format) const;
+    QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const;
 };
 
 QT_END_NAMESPACE
 
-#endif // QT_NO_WIDGETS
-
-#endif // QGRAPHICSSVGITEM_H
+#endif // QT_SVG_IMAGE_IO_PLUGIN

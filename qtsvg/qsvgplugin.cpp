@@ -3,7 +3,7 @@
 ** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
-** This file is part of the Qt SVG module of the Qt Toolkit.
+** This file is part of the plugins of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,61 +39,31 @@
 **
 ****************************************************************************/
 
-#ifndef QSVGFONT_P_H
-#define QSVGFONT_P_H
+#include "qsvgplugin.h"
+#include "qsvgiohandler.h"
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
-
-#include "qpainterpath.h"
-#include "qhash.h"
-#include "qstring.h"
-#include "qsvgstyle_p.h"
-
-QT_BEGIN_NAMESPACE
-
-class QSvgGlyph
+QStringList QSvgPlugin::keys() const
 {
-public:
-    QSvgGlyph(QChar unicode, const QPainterPath &path, qreal horizAdvX);
-    QSvgGlyph() : m_unicode(0), m_horizAdvX(0) {}
+    return QStringList() << QLatin1String("svg") << QLatin1String("svgz");
+}
 
-    QChar m_unicode;
-    QPainterPath m_path;
-    qreal m_horizAdvX;
-};
-
-
-class QSvgFont : public QSvgRefCounted
+QImageIOPlugin::Capabilities QSvgPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-public:
-    QSvgFont(qreal horizAdvX);
+    if (format == "svg" || format == "svgz")
+        return Capabilities(CanRead);
+    if (!format.isEmpty())
+        return 0;
 
-    void setFamilyName(const QString &name);
-    QString familyName() const;
+    Capabilities cap;
+    if (device->isReadable() && QSvgIOHandler::canRead(device))
+        cap |= CanRead;
+    return cap;
+}
 
-    void setUnitsPerEm(qreal upem);
-
-    void addGlyph(QChar unicode, const QPainterPath &path, qreal horizAdvX = -1);
-
-    void draw(QPainter *p, const QPointF &point, const QString &str, qreal pixelSize, Qt::Alignment alignment) const;
-public:
-    QString m_familyName;
-    qreal m_unitsPerEm;
-    qreal m_ascent;
-    qreal m_descent;
-    qreal m_horizAdvX;
-    QHash<QChar, QSvgGlyph> m_glyphs;
-};
-
-QT_END_NAMESPACE
-
-#endif // QSVGFONT_P_H
+QImageIOHandler *QSvgPlugin::create(QIODevice *device, const QByteArray &format) const
+{
+    QSvgIOHandler *hand = new QSvgIOHandler();
+    hand->setDevice(device);
+    hand->setFormat(format);
+    return hand;
+}

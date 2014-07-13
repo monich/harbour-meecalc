@@ -34,9 +34,8 @@
 
 #include <QtGui>
 #include <QtQuick>
-#include <QPluginLoader>
 
-Q_IMPORT_PLUGIN(SvgPlugin)
+Q_IMPORT_PLUGIN(QSvgPlugin)
 
 int main(int argc, char *argv[])
 {
