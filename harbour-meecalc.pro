@@ -17,7 +17,6 @@ HEADERS += \
 
 OTHER_FILES += \
     qml/*.qml \
-    qml/*.png \
     qml/*.svg \
     harbour-meecalc.desktop \
     rpm/harbour-meecalc.changes \
@@ -26,7 +25,6 @@ OTHER_FILES += \
 # qtsvg
 
 DEFINES += QT_STATIC QT_STATICPLUGIN
-LIBS += -lz
 
 QT_SVG_PLUGIN_DIR = qtsvg
 
