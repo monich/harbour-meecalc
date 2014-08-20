@@ -306,12 +306,12 @@ bool CalcEngine::perform(QString aOperation)
                 result *= 10;
                 iDenominator *= 10;
             }
-            modf(result, &ipart);
+            ipart = result;
         } else {
             QASSERT(pos < 0);
             iPrecision = -1;
         }
-        iNumerator = (quint64)ipart;
+        iNumerator = (quint64)(ipart + 0.5);
         iMinus = minus;
         QDEBUG("(" << iPrecision << ")" << (minus ? '-' : '+') <<
             iNumerator << "/" << iDenominator);
