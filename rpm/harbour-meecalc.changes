@@ -1,2 +1,11 @@
+* Wed Aug 20 2014 Slava Monich <slava.monich@jolla.com> 1.0.3
+- Fixed the "0.7*0.7=0.48" bug
+
+* Sat Jul 13 2014 Slava Monich <slava.monich@jolla.com> 1.0.2
+- Reduced the size of the binary
+
+* Sat Jul 12 2014 Slava Monich <slava.monich@jolla.com> 1.0.1
+- First release
+
 * Sat Jul 5 2014 Slava Monich <slava.monich@jolla.com> 1.0.0
 - Initial version
