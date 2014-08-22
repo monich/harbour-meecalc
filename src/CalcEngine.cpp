@@ -134,12 +134,11 @@ double CalcEngine::currentNumber() const
     return iMinus ? (-x) : x;
 }
 
-void CalcEngine::digit(int aDigit)
+void CalcEngine::checkForNewInput()
 {
-    QDEBUG(aDigit);
-
+    // Check if we are starting to type next number
     if (iNewInput || !iSelectedOp.isEmpty()) {
-        // We started typing new number
+        QDEBUG(iSelectedOp);
         iLeft = currentNumber();
         iNumerator = 0;
         iDenominator = 1;
@@ -149,6 +148,12 @@ void CalcEngine::digit(int aDigit)
         iPendingOp = iSelectedOp;
         resetSelectedOp();
     }
+}
+
+void CalcEngine::digit(int aDigit)
+{
+    QDEBUG(aDigit);
+    checkForNewInput();
 
     // Check for overflow
     quint64 num = iNumerator * 10 + aDigit;
@@ -176,10 +181,12 @@ void CalcEngine::digit(int aDigit)
 
 void CalcEngine::fraction()
 {
-    QDEBUG("");
+    QDEBUG(iNumerator);
+    checkForNewInput();
     if (iPrecision < 0) {
         iPrecision = 0;
         iDenominator = 1;
+        iNewInput = false;
         updateText();
     } else {
         emit oops();

@@ -69,6 +69,7 @@ private:
     bool perform(QString aOperation);
     void setSelectedOp(QString aOperation);
     void resetSelectedOp() { setSelectedOp(""); }
+    void checkForNewInput();
     void setText(QString aText);
     void updateText();
 
