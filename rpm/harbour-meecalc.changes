@@ -1,3 +1,6 @@
+* Sat Aug 23 2014 Slava Monich <slava.monich@jolla.com> 1.0.4
+- Fixed a problem with fraction sign handling (.4 -> 4)
+
 * Wed Aug 20 2014 Slava Monich <slava.monich@jolla.com> 1.0.3
 - Fixed the "0.7*0.7=0.48" bug
 
