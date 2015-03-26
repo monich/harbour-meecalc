@@ -1,15 +1,10 @@
-%{!?qtc_qmake:%define qtc_qmake %qmake}
-%{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
-%{!?qtc_make:%define qtc_make make}
-%{?qtc_builddir:%define _builddir %qtc_builddir}
-
 Name:       harbour-meecalc
 Summary:    Calculator
 Version:    1.0.4
 Release:    1
 Group:      Qt/Qt
 License:    BSD
-URL:        http://jolla.com/
+URL:        http://github.com/monich/harbour-meecalc
 Source0:    %{name}-%{version}.tar.bz2
 
 Requires:      sailfishsilica-qt5 >= 0.10.9
@@ -19,6 +14,11 @@ BuildRequires: pkgconfig(Qt5Qml)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Svg)
 BuildRequires: desktop-file-utils
+
+%{!?qtc_qmake:%define qtc_qmake %qmake}
+%{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
+%{!?qtc_make:%define qtc_make make}
+%{?qtc_builddir:%define _builddir %qtc_builddir}
 
 %description
 N9 style calculator

@@ -1,6 +1,6 @@
 TARGET = harbour-meecalc
 CONFIG += sailfishapp
-QMAKE_CXXFLAGS += -Wno-unused-parameter
+QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-psabi
 QT += svg
 
 CONFIG(debug, debug|release) {
