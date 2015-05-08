@@ -33,12 +33,13 @@
 #ifndef CALC_DEBUG_H
 #define CALC_DEBUG_H
 
+#include <QDebug>
+
 #ifndef CALC_DEBUG
 #  define CALC_DEBUG 0
 #endif // CALC_DEBUG
 
 #if CALC_DEBUG
-#  include <QDebug>
 #  define QDEBUG(x) qDebug() << x
 #  define QASSERT(x) ((x) ? ((void)0) : qt_assert(#x,__FILE__,__LINE__))
 #  define QVERIFY(x) QASSERT(x)
