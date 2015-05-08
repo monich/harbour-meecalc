@@ -30,48 +30,28 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "CalcEngine.h"
-#include "CalcState.h"
+#ifndef CALCSTATE_H
+#define CALCSTATE_H
 
-#include <sailfishapp.h>
+#include <QTimer>
+#include <QVariantMap>
 
-#include <QtGui>
-#include <QtQuick>
-#include <QStandardPaths>
-
-Q_IMPORT_PLUGIN(QSvgPlugin)
-
-#define MEECALC_APP "harbour-meecalc"
-
-int main(int argc, char *argv[])
+class CalcState : public QObject
 {
-    QGuiApplication* app = SailfishApp::application(argc, argv);
+    Q_OBJECT
+public:
+    CalcState(QString aPath, QObject* aParent = NULL);
+    QVariantMap state() const { return iState; }
+    void saveNow();
 
-    qmlRegisterType<CalcEngine>("harbour.meecalc", 1, 0, "CalcEngine");
+private slots:
+    void onTimeout();
+    void onStateChanged(QVariantMap aState);
 
-    QString statePath(QStandardPaths::writableLocation(
-         QStandardPaths::GenericDataLocation) +
-         QStringLiteral("/" MEECALC_APP "/") +
-         QStringLiteral("state.json"));
-    CalcState* state = new CalcState(statePath, app);
-    CalcEngine* engine = new CalcEngine(app);
-    engine->setState(state->state());
-    QObject::connect(engine, SIGNAL(stateChanged(QVariantMap)),
-        state, SLOT(onStateChanged(QVariantMap)));
+private:
+    QTimer* iTimer;
+    QVariantMap iState;
+    QString iPath;
+};
 
-    QQuickView* view = SailfishApp::createView();
-    QQmlContext* root = view->rootContext();
-    root->setContextProperty("OP_MULTIPLY", CalcEngine::OP_MULTIPLY);
-    root->setContextProperty("OP_DIVIDE", CalcEngine::OP_DIVIDE);
-    root->setContextProperty("OP_MINUS", CalcEngine::OP_MINUS);
-    root->setContextProperty("OP_PLUS", CalcEngine::OP_PLUS);
-    root->setContextProperty("Engine", engine);
-
-    view->setSource(SailfishApp::pathTo(QString("qml/main.qml")));
-    view->show();
-    int result = app->exec();
-    state->saveNow();
-    delete view;
-    delete app;
-    return result;
-}
+#endif // CALCSTATE_H

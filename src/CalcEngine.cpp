@@ -38,10 +38,31 @@ const QString CalcEngine::OP_DIVIDE("\u00f7");
 const QString CalcEngine::OP_MINUS("-");
 const QString CalcEngine::OP_PLUS("+");
 
+static const QString kMaxDigits("MaxDigits");
+static const QString kPrecision("Precision");
+static const QString kNumerator("Numerator");
+static const QString kDenominator("Denominator");
+static const QString kMinus("Minus");
+static const QString kNewInput("NewInput");
+static const QString kLeft("Left");
+static const QString kPendingOp("PendingOp");
+static const QString kSelectedOp("SelectedOp");
+
+class CalcEngine::StateChangeBlocker {
+public:
+    CalcEngine* iEngine;
+    StateChangeBlocker(CalcEngine* aEngine) : iEngine(aEngine)
+        { aEngine->suspendStateChanges(); }
+    ~StateChangeBlocker()
+        { iEngine->resumeStateChanges(); }
+};
+
 CalcEngine::CalcEngine(QObject* aParent) :
     QObject(aParent),
     iMaxDigits(12),
-    iLocale(QLocale::system())
+    iLocale(QLocale::system()),
+    iStateChangesSuspended(0),
+    iStateChanged(false)
 {
     clear();
 }
@@ -51,6 +72,7 @@ void CalcEngine::setMaxDigits(int aMaxDigits)
     if (iMaxDigits != aMaxDigits && aMaxDigits > 0) {
         iMaxDigits = aMaxDigits;
         emit maxDigitsChanged(aMaxDigits);
+        stateChanged();
     }
 }
 
@@ -84,7 +106,8 @@ void CalcEngine::setSelectedOp(QString aOperation)
 {
     if (iSelectedOp != aOperation) {
         iSelectedOp = aOperation;
-        selectedOpChanged(aOperation);
+        emit selectedOpChanged(aOperation);
+        stateChanged();
     }
 }
 
@@ -119,6 +142,7 @@ void CalcEngine::updateText()
 void CalcEngine::clear()
 {
     QDEBUG("clearing state");
+    StateChangeBlocker blocker(this);
     iNumerator = 0;
     iDenominator = 1;
     iPrecision = -1;
@@ -128,6 +152,7 @@ void CalcEngine::clear()
     iPendingOp.clear();
     resetSelectedOp();
     updateText();
+    stateChanged();
 }
 
 double CalcEngine::currentNumber() const
@@ -140,6 +165,7 @@ void CalcEngine::checkForNewInput()
 {
     // Check if we are starting to type next number
     if (iNewInput || !iSelectedOp.isEmpty()) {
+        StateChangeBlocker blocker(this);
         QDEBUG(iSelectedOp);
         iLeft = currentNumber();
         iNumerator = 0;
@@ -149,12 +175,14 @@ void CalcEngine::checkForNewInput()
         iNewInput = false;
         iPendingOp = iSelectedOp;
         resetSelectedOp();
+        stateChanged();
     }
 }
 
 void CalcEngine::digit(int aDigit)
 {
     QDEBUG(aDigit);
+    StateChangeBlocker blocker(this);
     checkForNewInput();
 
     // Check for overflow
@@ -177,6 +205,7 @@ void CalcEngine::digit(int aDigit)
                 QDEBUG(iNumerator);
             }
             updateText();
+            stateChanged();
         }
     }
 }
@@ -184,12 +213,14 @@ void CalcEngine::digit(int aDigit)
 void CalcEngine::fraction()
 {
     QDEBUG(iNumerator);
+    StateChangeBlocker blocker(this);
     checkForNewInput();
     if (iPrecision < 0) {
         iPrecision = 0;
         iDenominator = 1;
         iNewInput = false;
         updateText();
+        stateChanged();
     } else {
         emit oops();
     }
@@ -197,6 +228,7 @@ void CalcEngine::fraction()
 
 void CalcEngine::backspace()
 {
+    StateChangeBlocker blocker(this);
     if (!iSelectedOp.isEmpty()) {
         resetSelectedOp();
     } else if (iPrecision == 0) {
@@ -205,6 +237,7 @@ void CalcEngine::backspace()
         iDenominator = 1;
         iMinus = false;
         updateText();
+        stateChanged();
     } else if (iNumerator > 0) {
         iNumerator /= 10;
         if (iNumerator == 0) iMinus = false;
@@ -214,6 +247,7 @@ void CalcEngine::backspace()
         }
         QDEBUG(iNumerator);
         updateText();
+        stateChanged();
     } else {
         QDEBUG("nothing to do");
     }
@@ -221,10 +255,12 @@ void CalcEngine::backspace()
 
 void CalcEngine::plusminus()
 {
+    StateChangeBlocker blocker(this);
     if (iNumerator || iPrecision >= 0) {
         QDEBUG(iMinus);
         iMinus = !iMinus;
         updateText();
+        stateChanged();
     } else {
         QDEBUG("zero");
     }
@@ -233,6 +269,7 @@ void CalcEngine::plusminus()
 void CalcEngine::operation(QString aOperation)
 {
     QDEBUG(aOperation);
+    StateChangeBlocker blocker(this);
     if (iSelectedOp == aOperation) {
         resetSelectedOp();
     } else {
@@ -240,6 +277,7 @@ void CalcEngine::operation(QString aOperation)
             QDEBUG("performing pending operation");
             if (perform(iPendingOp)) {
                 iPendingOp.clear();
+                stateChanged();
             } else {
                 emit oops();
             }
@@ -250,6 +288,7 @@ void CalcEngine::operation(QString aOperation)
 
 void CalcEngine::enter()
 {
+    StateChangeBlocker blocker(this);
     if (!iPendingOp.isEmpty()) {
         QDEBUG("performing pending operation");
         if (perform(iPendingOp)) {
@@ -304,6 +343,7 @@ bool CalcEngine::perform(QString aOperation)
         emit oops();
         return false;
     } else {
+        StateChangeBlocker blocker(this);
         str = QString::number(result, 'f', iMaxDigits-str.length());
         while (str.endsWith('0')) str = str.left(str.length()-1);
         if (str.endsWith('.')) str = str.left(str.length()-1);
@@ -326,6 +366,92 @@ bool CalcEngine::perform(QString aOperation)
             iNumerator << "/" << iDenominator);
         updateText();
         iNewInput = true;
+        stateChanged();
         return true;
+    }
+}
+
+QVariantMap CalcEngine::state() const
+{
+    QVariantMap state;
+    state.insert(kMaxDigits, iMaxDigits);
+    state.insert(kPrecision, iPrecision);
+    state.insert(kNumerator, iNumerator);
+    state.insert(kDenominator, iDenominator);
+    state.insert(kMinus, iMinus);
+    state.insert(kNewInput, iNewInput);
+    state.insert(kLeft, iLeft);
+    state.insert(kPendingOp, iPendingOp);
+    state.insert(kSelectedOp, iSelectedOp);
+    return state;
+}
+
+void CalcEngine::setState(QVariantMap aState)
+{
+    suspendStateChanges();
+    bool ok = false;
+    const int maxDigits = aState.value(kMaxDigits).toInt(&ok);
+    if (ok && maxDigits > 0 && iMaxDigits != maxDigits) {
+        QDEBUG("MaxDigits:" << maxDigits);
+        iMaxDigits = maxDigits;
+        emit maxDigitsChanged(maxDigits);
+    }
+    const int precision = aState.value(kPrecision).toInt(&ok);
+    if (ok && precision >= -1) {
+        QDEBUG("Precision:" << precision);
+        iPrecision = precision;
+    }
+    quint64 numerator = aState.value(kNumerator).toULongLong(&ok);
+    if (ok) {
+        QDEBUG("Numerator:" << numerator);
+        iNumerator = numerator;
+    }
+    quint64 denominator = aState.value(kDenominator).toULongLong(&ok);
+    if (ok) {
+        QDEBUG("Denominator:" << denominator);
+        iDenominator = denominator;
+    }
+    const double left = aState.value(kLeft).toDouble(&ok);
+    if (ok) {
+        QDEBUG("Left:" << left);
+        iLeft = left;
+    }
+    iPendingOp = aState.value(kPendingOp).toString();
+    const QString selectedOp(aState.value(kSelectedOp).toString());
+    if (iSelectedOp != selectedOp) {
+        iSelectedOp = selectedOp;
+        QDEBUG("Denominator:" << selectedOp);
+        emit selectedOpChanged(selectedOp);
+    }
+    iMinus = aState.value(kMinus).toBool();
+    QDEBUG("Minus:" << iMinus);
+    iNewInput = aState.value(kNewInput).toBool();
+    QDEBUG("NewInput:" << iNewInput);
+    iStateChanged = false;
+    resumeStateChanges();
+    updateText();
+}
+
+void CalcEngine::suspendStateChanges()
+{
+    iStateChangesSuspended++;
+}
+
+void CalcEngine::resumeStateChanges()
+{
+    iStateChangesSuspended--;
+    if (!iStateChangesSuspended && iStateChanged) {
+        iStateChanged = false;
+        emit stateChanged(state());
+    }
+}
+
+void CalcEngine::stateChanged()
+{
+    if (iStateChangesSuspended > 0) {
+        iStateChanged = true;
+    } else {
+        iStateChanged = false;
+        emit stateChanged(state());
     }
 }

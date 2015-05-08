@@ -43,6 +43,9 @@ class CalcEngine : public QObject
     Q_PROPERTY(QString selectedOp READ selectedOp NOTIFY selectedOpChanged)
     Q_PROPERTY(QString text READ text NOTIFY textChanged)
 
+    class StateChangeBlocker;
+    friend class StateChangeBlocker;
+
 public:
     explicit CalcEngine(QObject* aParent = NULL);
 
@@ -65,6 +68,8 @@ public:
     void setLocale(QString aLocale);
     QString selectedOp() const;
     QString text() const;
+    QVariantMap state() const;
+    void setState(QVariantMap aState);
 
 private:
     double currentNumber() const;
@@ -74,8 +79,12 @@ private:
     void checkForNewInput();
     void setText(QString aText);
     void updateText();
+    void stateChanged();
+    void suspendStateChanges();
+    void resumeStateChanges();
 
 signals:
+    void stateChanged(QVariantMap aState);
     void maxDigitsChanged(int aValue);
     void localeChanged(QString aValue);
     void selectedOpChanged(QString aValue);
@@ -94,6 +103,8 @@ private:
     QString iPendingOp;
     QString iSelectedOp;
     QLocale iLocale;
+    int iStateChangesSuspended;
+    bool iStateChanged;
 };
 
 QML_DECLARE_TYPE(CalcEngine)

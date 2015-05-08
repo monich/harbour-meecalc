@@ -37,7 +37,6 @@ import harbour.meecalc 1.0
 ApplicationWindow {
     id: window
     allowedOrientations: Orientation.Portrait
-    initialPage: Component { CalcPage { engine: calcEngine } }
+    initialPage: Component { CalcPage { engine: Engine } }
     cover: Qt.resolvedUrl("CalcCover.qml")
-    CalcEngine { id: calcEngine }
 }

@@ -9,11 +9,13 @@ CONFIG(debug, debug|release) {
 
 SOURCES += \
     src/main.cpp \
-    src/CalcEngine.cpp
+    src/CalcEngine.cpp \
+    src/CalcState.cpp
 
 HEADERS += \
     src/CalcDebug.h \
-    src/CalcEngine.h
+    src/CalcEngine.h \
+    src/CalcState.h
 
 OTHER_FILES += \
     qml/*.qml \
