@@ -1,3 +1,6 @@
+* Fri May 8 2015 Slava Monich <slava.monich@jolla.com> 1.0.5
+- Save calculator state
+
 * Sat Aug 23 2014 Slava Monich <slava.monich@jolla.com> 1.0.4
 - Fixed a problem with fraction sign handling (.4 -> 4)
 
