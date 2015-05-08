@@ -42,28 +42,25 @@ Item {
     property int maximumSize: 200
 
     function flash() {
-        flashTimer.restart()
-    }
-
-    Timer {
-        id: flashTimer
-        repeat: false
-        interval: 50
+        pressAnimation.start()
     }
 
     Rectangle {
+        id: background
         anchors {
             right: parent.right
             verticalCenter: parent.verticalCenter
         }
-        color: flashTimer.running ? textColor : "transparent"
+        opacity: 0
+        radius: height/10
+        color: textColor
         width: displayText.paintedWidth
         height: displayText.paintedHeight
     }
 
     Text {
         id: displayText
-        color: flashTimer.running ? "black" : textColor
+        color: textColor
         anchors.fill: parent
 
         smooth: true
@@ -93,6 +90,36 @@ Item {
                     return
                 }
             }
+        }
+    }
+
+    SequentialAnimation{
+        id: pressAnimation
+        PropertyAction {
+            target: displayText
+            property: "color"
+            value: "black"
+        }
+        NumberAnimation {
+            target: background
+            property: "opacity"
+            easing.type: Easing.OutCubic
+            duration: 50
+            from: 0
+            to: 1
+        }
+        NumberAnimation {
+            target: background
+            properties: "opacity"
+            easing.type: Easing.InCubic
+            duration: 50
+            from: 1
+            to: 0
+        }
+        PropertyAction {
+            target: displayText
+            property: "color"
+            value: textColor
         }
     }
 }
