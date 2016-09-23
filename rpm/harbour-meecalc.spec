@@ -9,6 +9,7 @@ Source0:    %{name}-%{version}.tar.bz2
 
 Requires:      sailfishsilica-qt5 >= 0.10.9
 Requires:      qt5-qtsvg-plugin-imageformat-svg
+BuildRequires: qt5-qttools-linguist
 BuildRequires: pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires: pkgconfig(Qt5Core)
 BuildRequires: pkgconfig(Qt5Qml)
@@ -28,6 +29,7 @@ N9 style calculator
 %setup -q -n %{name}-%{version}
 
 %build
+touch harbour-meecalc.pro # Protection against time skew in obs
 %qtc_qmake5 
 %qtc_make %{?_smp_mflags}
 

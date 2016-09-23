@@ -58,6 +58,19 @@ int main(int argc, char *argv[])
     QObject::connect(engine, SIGNAL(stateChanged(QVariantMap)),
         state, SLOT(onStateChanged(QVariantMap)));
 
+    // Load translations
+    QLocale locale;
+    QTranslator* translator = new QTranslator(app);
+    QString transDir = SailfishApp::pathTo("translations").toLocalFile();
+    QString transFile("harbour-meecalc");
+    if (translator->load(locale, transFile, "-", transDir) ||
+        translator->load(transFile, transDir)) {
+        app->installTranslator(translator);
+    } else {
+        qWarning() << "Failed to load translator for" << locale;
+        delete translator;
+    }
+
     QQuickView* view = SailfishApp::createView();
     QQmlContext* root = view->rootContext();
     root->setContextProperty("OP_MULTIPLY", CalcEngine::OP_MULTIPLY);

@@ -1,34 +1,35 @@
 /*
-  Copyright (C) 2014-2015 Jolla Ltd.
-  Contact: Slava Monich <slava.monich@jolla.com>
-
-  You may use this file under the terms of BSD license as follows:
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the Jolla Ltd nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS
-  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ * Copyright (C) 2014-2016 Jolla Ltd.
+ * Contact: Slava Monich <slava.monich@jolla.com>
+ *
+ * You may use this file under the terms of the BSD license as follows:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *   - Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   - Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in
+ *     the documentation and/or other materials provided with the
+ *     distribution.
+ *   - Neither the name of Jolla Ltd nor the names of its contributors
+ *     may be used to endorse or promote products derived from this
+ *     software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
@@ -46,6 +47,9 @@ Item {
 
     property int gap: paddingLarge + paddingSmall
 
+    signal textCopied(var text)
+    signal buttonPressed()
+
     Connections {
         target: engine
         onOops: {
@@ -60,6 +64,7 @@ Item {
             bottom: buttons.top
             left: parent.left
             right: parent.right
+            bottomMargin: paddingSmall
         }
 
         Display {
@@ -72,6 +77,8 @@ Item {
                 right: backspace.left
                 rightMargin: paddingLarge
             }
+            onTextCopied: calculator.textCopied(text)
+            onPressed: calculator.buttonPressed()
         }
         Backspace {
             id: backspace
@@ -81,14 +88,17 @@ Item {
                 bottom: parent.bottom
                 right: parent.right
             }
-            onPressed: engine.backspace()
+            onPressed: {
+                engine.backspace()
+                calculator.buttonPressed()
+            }
             onRepeat: engine.backspace()
         }
     }
 
     Column {
         id: buttons
-        spacing: 2
+        spacing: paddingSmall
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
@@ -107,20 +117,29 @@ Item {
             CalcButton {
                 width: buttonSize
                 text: "C"
-                onPressed: engine.clear()
+                onPressed: {
+                    engine.clear()
+                    calculator.buttonPressed()
+                }
             }
             CalcButton {
                 id: divideButton
                 width: buttonSize
                 text: OP_DIVIDE
-                onPressed: engine.operation(text)
+                onPressed: {
+                    engine.operation(text)
+                    calculator.buttonPressed()
+                }
                 selected: engine.selectedOp === text
             }
             CalcButton {
                 id: multiplyButton
                 width: buttonSize
                 text: OP_MULTIPLY
-                onPressed: engine.operation(text)
+                onPressed: {
+                    engine.operation(text)
+                    calculator.buttonPressed()
+                }
                 selected: engine.selectedOp === text
             }
         }
@@ -130,20 +149,29 @@ Item {
             CalcButton {
                 width: buttonSize
                 text: "\u00b1"
-                onPressed: engine.plusminus()
+                onPressed: {
+                    engine.plusminus()
+                    calculator.buttonPressed()
+                }
             }
             CalcButton {
                 id: minusButton
                 width: buttonSize
                 text: OP_MINUS
-                onPressed: engine.operation(text)
+                onPressed: {
+                    engine.operation(text)
+                    calculator.buttonPressed()
+                }
                 selected: engine.selectedOp === text
             }
             CalcButton {
                 id: plusButton
                 width: buttonSize
                 text: OP_PLUS
-                onPressed: engine.operation(text)
+                onPressed: {
+                    engine.operation(text)
+                    calculator.buttonPressed()
+                }
                 selected: engine.selectedOp === text
             }
         }
@@ -152,17 +180,26 @@ Item {
             CalcButton {
                 width: buttonSize
                 text: "7"
-                onPressed: engine.digit(Number(text))
+                onPressed: {
+                    engine.digit(Number(text))
+                    calculator.buttonPressed()
+                }
             }
             CalcButton {
                 width: buttonSize
                 text: "8"
-                onPressed: engine.digit(Number(text))
+                onPressed: {
+                    engine.digit(Number(text))
+                    calculator.buttonPressed()
+                }
             }
             CalcButton {
                 width: buttonSize
                 text: "9"
-                onPressed: engine.digit(Number(text))
+                onPressed: {
+                    engine.digit(Number(text))
+                    calculator.buttonPressed()
+                }
             }
         }
         Row {
@@ -170,17 +207,26 @@ Item {
             CalcButton {
                 width: buttonSize
                 text: "4"
-                onPressed: engine.digit(Number(text))
+                onPressed: {
+                    engine.digit(Number(text))
+                    calculator.buttonPressed()
+                }
             }
             CalcButton {
                 width: buttonSize
                 text: "5"
-                onPressed: engine.digit(Number(text))
+                onPressed: {
+                    engine.digit(Number(text))
+                    calculator.buttonPressed()
+                }
             }
             CalcButton {
                 width: buttonSize
                 text: "6"
-                onPressed: engine.digit(Number(text))
+                onPressed: {
+                    engine.digit(Number(text))
+                    calculator.buttonPressed()
+                }
             }
         }
         Row {
@@ -188,17 +234,26 @@ Item {
             CalcButton {
                 width: buttonSize
                 text: "1"
-                onPressed: engine.digit(Number(text))
+                onPressed: {
+                    engine.digit(Number(text))
+                    calculator.buttonPressed()
+                }
             }
             CalcButton {
                 width: buttonSize
                 text: "2"
-                onPressed: engine.digit(Number(text))
+                onPressed: {
+                    engine.digit(Number(text))
+                    calculator.buttonPressed()
+                }
             }
             CalcButton {
                 width: buttonSize
                 text: "3"
-                onPressed: engine.digit(Number(text))
+                onPressed: {
+                    engine.digit(Number(text))
+                    calculator.buttonPressed()
+                }
             }
         }
         Row {
@@ -206,18 +261,27 @@ Item {
             CalcButton {
                 width: buttonSize
                 text: "0"
-                onPressed: engine.digit(Number(text))
+                onPressed: {
+                    engine.digit(Number(text))
+                    calculator.buttonPressed()
+                }
             }
             CalcButton {
                 width: buttonSize
                 text: Qt.locale().decimalPoint
-                onPressed: engine.fraction()
+                onPressed: {
+                    engine.fraction()
+                    calculator.buttonPressed()
+                }
             }
             CalcButton {
                 width: buttonSize
                 text: "="
                 normalColor: "#ef9608"
-                onPressed: engine.enter()
+                onPressed: {
+                    engine.enter()
+                    calculator.buttonPressed()
+                }
             }
         }
     }
