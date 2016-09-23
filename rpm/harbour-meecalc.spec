@@ -1,9 +1,10 @@
 Name:       harbour-meecalc
 Summary:    Calculator
-Version:    1.0.5
+Version:    1.0.6
 Release:    1
 Group:      Qt/Qt
 License:    BSD
+Vendor:     meego
 URL:        http://github.com/monich/harbour-meecalc
 Source0:    %{name}-%{version}.tar.bz2
 
@@ -30,7 +31,7 @@ N9 style calculator
 
 %build
 touch harbour-meecalc.pro # Protection against time skew in obs
-%qtc_qmake5 
+%qtc_qmake5
 %qtc_make %{?_smp_mflags}
 
 %install
