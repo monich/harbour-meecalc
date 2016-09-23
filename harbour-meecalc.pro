@@ -23,9 +23,25 @@ OTHER_FILES += \
     qml/*.qml \
     qml/*.svg \
     translations/*.ts \
-    harbour-meecalc.desktop \
+    icons/*.svg \
+    *.md \
+    *.desktop \
     rpm/harbour-meecalc.changes \
     rpm/harbour-meecalc.spec
+
+# Icons
+ICON_SIZES = 86 108 128 256
+for(s, ICON_SIZES) {
+    icon_target = icon$${s}
+    icon_dir = icons/$${s}x$${s}
+    $${icon_target}.files = $${icon_dir}/$${TARGET}.png
+    $${icon_target}.path = /usr/share/icons/hicolor/$${s}x$${s}/apps
+    equals(PREFIX, "openrepos") {
+        $${icon_target}.extra = cp $${icon_dir}/harbour-$${NAME}.png $$eval($${icon_target}.files)
+        $${icon_target}.CONFIG += no_check_exist
+    }
+    INSTALLS += $${icon_target}
+}
 
 # Translations
 TRANSLATIONS_PATH = /usr/share/$${TARGET}/translations
