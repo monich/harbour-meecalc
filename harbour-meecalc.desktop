@@ -1,5 +1,6 @@
 [Desktop Entry]
 Type=Application
+Categories=Office
 X-Nemo-Application-Type=silica-qt5
 Name=MeeCalc
 Icon=harbour-meecalc
