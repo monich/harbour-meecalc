@@ -48,7 +48,7 @@ TRANSLATIONS_PATH = /usr/share/$${TARGET}/translations
 TRANSLATION_SOURCES = $${_PRO_FILE_PWD_}/qml
 
 defineTest(addTrFile) {
-    in = $${_PRO_FILE_PWD_}/translations/harbour-$$1
+    in = $${_PRO_FILE_PWD_}/translations/$${PREFIX}-$$1
     out = $${OUT_PWD}/translations/$${PREFIX}-$$1
 
     s = $$replace(1,-,_)
@@ -59,13 +59,13 @@ defineTest(addTrFile) {
         mkdir -p \"$${OUT_PWD}/translations\" &&  [ \"$${in}.ts\" != \"$${out}.ts\" ] && \
         cp -af \"$${in}.ts\" \"$${out}.ts\" || :
 
-    $${lrelease_target}.target = \"$${out}.qm\"
+    $${lrelease_target}.target = $${out}.qm
     $${lrelease_target}.depends = $${lupdate_target}
     $${lrelease_target}.commands = lrelease -idbased \"$${out}.ts\"
 
     QMAKE_EXTRA_TARGETS += $${lrelease_target} $${lupdate_target}
-    PRE_TARGETDEPS += \"$${out}.qm\"
-    qm.files += \"$${out}.qm\"
+    PRE_TARGETDEPS += $${out}.qm
+    qm.files += $${out}.qm
 
     export($${lupdate_target}.commands)
     export($${lrelease_target}.target)
@@ -76,7 +76,7 @@ defineTest(addTrFile) {
     export(qm.files)
 }
 
-LANGUAGES = de fi ru sv
+LANGUAGES = de fi nl ru sv
 
 addTrFile($${NAME})
 for(l, LANGUAGES) {
