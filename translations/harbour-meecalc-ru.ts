@@ -6,7 +6,7 @@
     <message id="calculator-notification-text_copied">
         <source>Copied to clipboard</source>
         <extracomment>Shown when display text has been copied to clipboard</extracomment>
-        <translation>Скопировано</translation>
+        <translation>Скопировано в буфер обмена</translation>
     </message>
 </context>
 </TS>
