@@ -2,10 +2,10 @@ Name:       harbour-meecalc
 Summary:    Calculator
 Version:    1.0.6
 Release:    1
-Group:      Qt/Qt
+Group:      Applications/Productivity
 License:    BSD
 Vendor:     meego
-URL:        http://github.com/monich/harbour-meecalc
+URL:        https://github.com/monich/harbour-meecalc
 Source0:    %{name}-%{version}.tar.bz2
 
 Requires:      sailfishsilica-qt5 >= 0.10.9
@@ -48,7 +48,3 @@ desktop-file-install --delete-original \
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-
-%changelog
-* Sat Jul 5 2014 Slava Monich <slava.monich@jolla.com> 1.0.0
-- Initial version
