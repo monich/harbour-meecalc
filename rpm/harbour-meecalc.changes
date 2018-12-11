@@ -1,3 +1,7 @@
+* Tue Dec 11 2018 Slava Monich <slava.monich@jolla.com> 1.0.8
+- Use notification icon when available
+- Adapted cover page to light ambiences in Sailfish 3.0
+
 * Thu Feb 1 2018 Slava Monich <slava.monich@jolla.com> 1.0.7
 - Added Dutch translations
 - Added French translations

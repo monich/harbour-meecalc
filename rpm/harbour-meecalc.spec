@@ -1,6 +1,6 @@
 Name:       harbour-meecalc
 Summary:    Calculator
-Version:    1.0.7
+Version:    1.0.8
 Release:    1
 Group:      Applications/Productivity
 License:    BSD
@@ -30,7 +30,6 @@ N9 style calculator
 %setup -q -n %{name}-%{version}
 
 %build
-touch harbour-meecalc.pro # Protection against time skew in obs
 %qtc_qmake5
 %qtc_make %{?_smp_mflags}
 
