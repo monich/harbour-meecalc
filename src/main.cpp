@@ -1,22 +1,22 @@
 /*
- * Copyright (C) 2014-2016 Jolla Ltd.
- * Contact: Slava Monich <slava.monich@jolla.com>
+ * Copyright (C) 2014-2018 Jolla Ltd.
+ * Copyright (C) 2014-2018 Slava Monich <slava.monich@jolla.com>
  *
- * You may use this file under the terms of the BSD license as follows:
+ * You may use this file under the terms of BSD license as follows:
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *   - Neither the name of Jolla Ltd nor the names of its contributors
- *     may be used to endorse or promote products derived from this
- *     software without specific prior written permission.
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ *   2. Redistributions in binary form must reproduce the above copyright
+ *      notice, this list of conditions and the following disclaimer in
+ *      the documentation and/or other materials provided with the
+ *      distribution.
+ *   3. Neither the names of the copyright holders nor the names of its
+ *      contributors may be used to endorse or promote products derived
+ *      from this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,6 +33,9 @@
 
 #include "CalcEngine.h"
 #include "CalcState.h"
+
+#include "HarbourImageProvider.h"
+#include "HarbourTheme.h"
 
 #include <sailfishapp.h>
 
@@ -53,9 +56,9 @@ int main(int argc, char *argv[])
          QStringLiteral("/" MEECALC_APP "/") +
          QStringLiteral("state.json"));
     CalcState* state = new CalcState(statePath, app);
-    CalcEngine* engine = new CalcEngine(app);
-    engine->setState(state->state());
-    QObject::connect(engine, SIGNAL(stateChanged(QVariantMap)),
+    CalcEngine* calcEngine = new CalcEngine(app);
+    calcEngine->setState(state->state());
+    QObject::connect(calcEngine, SIGNAL(stateChanged(QVariantMap)),
         state, SLOT(onStateChanged(QVariantMap)));
 
     // Load translations
@@ -72,12 +75,18 @@ int main(int argc, char *argv[])
     }
 
     QQuickView* view = SailfishApp::createView();
+    QQmlEngine* engine = view->engine();
+    QString imageProvider("meecalc");
+    engine->addImageProvider(imageProvider, new HarbourImageProvider);
+
     QQmlContext* root = view->rootContext();
+    root->setContextProperty("ImageProvider", imageProvider);
+    root->setContextProperty("HarbourTheme", new HarbourTheme(app));
     root->setContextProperty("OP_MULTIPLY", CalcEngine::OP_MULTIPLY);
     root->setContextProperty("OP_DIVIDE", CalcEngine::OP_DIVIDE);
     root->setContextProperty("OP_MINUS", CalcEngine::OP_MINUS);
     root->setContextProperty("OP_PLUS", CalcEngine::OP_PLUS);
-    root->setContextProperty("Engine", engine);
+    root->setContextProperty("Engine", calcEngine);
 
     view->setSource(SailfishApp::pathTo(QString("qml/main.qml")));
     view->show();

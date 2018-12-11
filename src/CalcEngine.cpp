@@ -1,36 +1,37 @@
 /*
-  Copyright (C) 2014-2015 Jolla Ltd.
-  Contact: Slava Monich <slava.monich@jolla.com>
+ * Copyright (C) 2014-2018 Jolla Ltd.
+ * Copyright (C) 2014-2018 Slava Monich <slava.monich@jolla.com>
+ *
+ * You may use this file under the terms of BSD license as follows:
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ *   2. Redistributions in binary form must reproduce the above copyright
+ *      notice, this list of conditions and the following disclaimer in
+ *      the documentation and/or other materials provided with the
+ *      distribution.
+ *   3. Neither the names of the copyright holders nor the names of its
+ *      contributors may be used to endorse or promote products derived
+ *      from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
-  You may use this file under the terms of BSD license as follows:
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of the Jolla Ltd nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS
-  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
-#include "CalcDebug.h"
+#include "HarbourDebug.h"
 #include "CalcEngine.h"
 
 const QString CalcEngine::OP_MULTIPLY("\u00d7");
@@ -141,7 +142,7 @@ void CalcEngine::updateText()
 
 void CalcEngine::clear()
 {
-    QDEBUG("clearing state");
+    HDEBUG("clearing state");
     StateChangeBlocker blocker(this);
     iNumerator = 0;
     iDenominator = 1;
@@ -166,7 +167,7 @@ void CalcEngine::checkForNewInput()
     // Check if we are starting to type next number
     if (iNewInput || !iSelectedOp.isEmpty()) {
         StateChangeBlocker blocker(this);
-        QDEBUG(iSelectedOp);
+        HDEBUG(iSelectedOp);
         iLeft = currentNumber();
         iNumerator = 0;
         iDenominator = 1;
@@ -181,28 +182,28 @@ void CalcEngine::checkForNewInput()
 
 void CalcEngine::digit(int aDigit)
 {
-    QDEBUG(aDigit);
+    HDEBUG(aDigit);
     StateChangeBlocker blocker(this);
     checkForNewInput();
 
     // Check for overflow
     quint64 num = iNumerator * 10 + aDigit;
     if ((num-aDigit)/10 != iNumerator) {
-        QDEBUG("overflow");
+        HDEBUG("overflow");
         emit oops();
     } else {
         QString str(QString::number(num));
         if (str.length() > iMaxDigits) {
-            QDEBUG("too many digits:" << str.length());
+            HDEBUG("too many digits:" << str.length());
             emit oops();
         } else {
             iNumerator = num;
             if (iPrecision >= 0) {
                 iPrecision++;
                 iDenominator *= 10;
-                QDEBUG(iNumerator<<"/"<<iDenominator<<"("<<iPrecision<<")");
+                HDEBUG(iNumerator<<"/"<<iDenominator<<"("<<iPrecision<<")");
             } else {
-                QDEBUG(iNumerator);
+                HDEBUG(iNumerator);
             }
             updateText();
             stateChanged();
@@ -212,7 +213,7 @@ void CalcEngine::digit(int aDigit)
 
 void CalcEngine::fraction()
 {
-    QDEBUG(iNumerator);
+    HDEBUG(iNumerator);
     StateChangeBlocker blocker(this);
     checkForNewInput();
     if (iPrecision < 0) {
@@ -232,7 +233,7 @@ void CalcEngine::backspace()
     if (!iSelectedOp.isEmpty()) {
         resetSelectedOp();
     } else if (iPrecision == 0) {
-        QDEBUG("taking out decimal point");
+        HDEBUG("taking out decimal point");
         iPrecision--;
         iDenominator = 1;
         iMinus = false;
@@ -245,11 +246,11 @@ void CalcEngine::backspace()
             iDenominator /= 10;
             iPrecision--;
         }
-        QDEBUG(iNumerator);
+        HDEBUG(iNumerator);
         updateText();
         stateChanged();
     } else {
-        QDEBUG("nothing to do");
+        HDEBUG("nothing to do");
     }
 }
 
@@ -257,24 +258,24 @@ void CalcEngine::plusminus()
 {
     StateChangeBlocker blocker(this);
     if (iNumerator || iPrecision >= 0) {
-        QDEBUG(iMinus);
+        HDEBUG(iMinus);
         iMinus = !iMinus;
         updateText();
         stateChanged();
     } else {
-        QDEBUG("zero");
+        HDEBUG("zero");
     }
 }
 
 void CalcEngine::operation(QString aOperation)
 {
-    QDEBUG(aOperation);
+    HDEBUG(aOperation);
     StateChangeBlocker blocker(this);
     if (iSelectedOp == aOperation) {
         resetSelectedOp();
     } else {
         if (!iPendingOp.isEmpty()) {
-            QDEBUG("performing pending operation");
+            HDEBUG("performing pending operation");
             if (perform(iPendingOp)) {
                 iPendingOp.clear();
                 stateChanged();
@@ -290,14 +291,14 @@ void CalcEngine::enter()
 {
     StateChangeBlocker blocker(this);
     if (!iPendingOp.isEmpty()) {
-        QDEBUG("performing pending operation");
+        HDEBUG("performing pending operation");
         if (perform(iPendingOp)) {
             iPendingOp.clear();
         } else {
             emit oops();
         }
     } else if (!iSelectedOp.isEmpty()) {
-        QDEBUG("performing selected operation");
+        HDEBUG("performing selected operation");
         iLeft = currentNumber();
         if (perform(iSelectedOp)) {
             resetSelectedOp();
@@ -305,7 +306,7 @@ void CalcEngine::enter()
             emit oops();
         }
     } else {
-        QDEBUG("nothing to do");
+        HDEBUG("nothing to do");
     }
 }
 
@@ -314,22 +315,22 @@ bool CalcEngine::perform(QString aOperation)
     double result, right = currentNumber();
     if (aOperation == OP_DIVIDE) {
         if (right == 0.0) {
-            QDEBUG("division by zero");
+            HDEBUG("division by zero");
             return false;
         }
         result = iLeft / right;
-        QDEBUG(iLeft << "/" << right << "=" << result);
+        HDEBUG(iLeft << "/" << right << "=" << result);
     } else if (aOperation == OP_MULTIPLY) {
         result = iLeft * right;
-        QDEBUG(iLeft << "*" << right << "=" << result);
+        HDEBUG(iLeft << "*" << right << "=" << result);
     } else if (aOperation == OP_MINUS) {
         result = iLeft - right;
-        QDEBUG(iLeft << "-" << right << "=" << result);
+        HDEBUG(iLeft << "-" << right << "=" << result);
     } else if (aOperation == OP_PLUS) {
         result = iLeft + right;
-        QDEBUG(iLeft << "+" << right << "=" << result);
+        HDEBUG(iLeft << "+" << right << "=" << result);
     } else {
-        QDEBUG("unexpected operation" << aOperation);
+        HDEBUG("unexpected operation" << aOperation);
         return false;
     }
 
@@ -339,7 +340,7 @@ bool CalcEngine::perform(QString aOperation)
     modf(result, &ipart);
     QString str(QString::number((quint64)ipart));
     if (str.length() > iMaxDigits) {
-        QDEBUG("too many digits");
+        HDEBUG("too many digits");
         emit oops();
         return false;
     } else {
@@ -357,12 +358,12 @@ bool CalcEngine::perform(QString aOperation)
             }
             ipart = result;
         } else {
-            QASSERT(pos < 0);
+            HASSERT(pos < 0);
             iPrecision = -1;
         }
         iNumerator = (quint64)(ipart + 0.5);
         iMinus = minus;
-        QDEBUG("(" << iPrecision << ")" << (minus ? '-' : '+') <<
+        HDEBUG("(" << iPrecision << ")" << (minus ? '-' : '+') <<
             iNumerator << "/" << iDenominator);
         updateText();
         iNewInput = true;
@@ -392,41 +393,41 @@ void CalcEngine::setState(QVariantMap aState)
     bool ok = false;
     const int maxDigits = aState.value(kMaxDigits).toInt(&ok);
     if (ok && maxDigits > 0 && iMaxDigits != maxDigits) {
-        QDEBUG("MaxDigits:" << maxDigits);
+        HDEBUG("MaxDigits:" << maxDigits);
         iMaxDigits = maxDigits;
         emit maxDigitsChanged(maxDigits);
     }
     const int precision = aState.value(kPrecision).toInt(&ok);
     if (ok && precision >= -1) {
-        QDEBUG("Precision:" << precision);
+        HDEBUG("Precision:" << precision);
         iPrecision = precision;
     }
     quint64 numerator = aState.value(kNumerator).toULongLong(&ok);
     if (ok) {
-        QDEBUG("Numerator:" << numerator);
+        HDEBUG("Numerator:" << numerator);
         iNumerator = numerator;
     }
     quint64 denominator = aState.value(kDenominator).toULongLong(&ok);
     if (ok) {
-        QDEBUG("Denominator:" << denominator);
+        HDEBUG("Denominator:" << denominator);
         iDenominator = denominator;
     }
     const double left = aState.value(kLeft).toDouble(&ok);
     if (ok) {
-        QDEBUG("Left:" << left);
+        HDEBUG("Left:" << left);
         iLeft = left;
     }
     iPendingOp = aState.value(kPendingOp).toString();
     const QString selectedOp(aState.value(kSelectedOp).toString());
     if (iSelectedOp != selectedOp) {
         iSelectedOp = selectedOp;
-        QDEBUG("Denominator:" << selectedOp);
+        HDEBUG("Denominator:" << selectedOp);
         emit selectedOpChanged(selectedOp);
     }
     iMinus = aState.value(kMinus).toBool();
-    QDEBUG("Minus:" << iMinus);
+    HDEBUG("Minus:" << iMinus);
     iNewInput = aState.value(kNewInput).toBool();
-    QDEBUG("NewInput:" << iNewInput);
+    HDEBUG("NewInput:" << iNewInput);
     iStateChanged = false;
     resumeStateChanges();
     updateText();

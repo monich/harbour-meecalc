@@ -4,9 +4,10 @@ TARGET = $${PREFIX}-$${NAME}
 CONFIG += sailfishapp
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-psabi
 QT += svg
+LIBS += -ldl
 
 CONFIG(debug, debug|release) {
-  DEFINES += CALC_DEBUG=1
+    DEFINES += HARBOUR_DEBUG=1
 }
 
 SOURCES += \
@@ -14,10 +15,23 @@ SOURCES += \
     src/CalcEngine.cpp \
     src/CalcState.cpp
 
+SOURCES += \
+    harbour-lib/src/HarbourJson.cpp \
+    harbour-lib/src/HarbourTheme.cpp \
+    harbour-lib/src/HarbourImageProvider.cpp
+
 HEADERS += \
-    src/CalcDebug.h \
     src/CalcEngine.h \
     src/CalcState.h
+
+HEADERS += \
+    harbour-lib/include/HarbourDebug.h \
+    harbour-lib/include/HarbourJson.h \
+    harbour-lib/include/HarbourImageProvider.h \
+    harbour-lib/include/HarbourTheme.h
+
+INCLUDEPATH += \
+    harbour-lib/include
 
 OTHER_FILES += \
     qml/*.qml \

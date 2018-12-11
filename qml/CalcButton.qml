@@ -53,6 +53,7 @@ MouseArea {
         source: Qt.resolvedUrl("meecalc-button-background.svg")
         smooth: true
         opacity: 0
+        visible: opacity > 0
     }
 
     Text {

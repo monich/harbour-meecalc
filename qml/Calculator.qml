@@ -1,22 +1,22 @@
 /*
- * Copyright (C) 2014-2016 Jolla Ltd.
- * Contact: Slava Monich <slava.monich@jolla.com>
+ * Copyright (C) 2014-2018 Jolla Ltd.
+ * Copyright (C) 2014-2018 Slava Monich <slava.monich@jolla.com>
  *
- * You may use this file under the terms of the BSD license as follows:
+ * You may use this file under the terms of BSD license as follows:
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *   - Neither the name of Jolla Ltd nor the names of its contributors
- *     may be used to endorse or promote products derived from this
- *     software without specific prior written permission.
+ *   1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ *   2. Redistributions in binary form must reproduce the above copyright
+ *      notice, this list of conditions and the following disclaimer in
+ *      the documentation and/or other materials provided with the
+ *      distribution.
+ *   3. Neither the names of the copyright holders nor the names of its
+ *      contributors may be used to endorse or promote products derived
+ *      from this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -39,13 +39,15 @@ Item {
     implicitWidth: buttons.width
 
     property var engine
-    property int buttonSize: height/8
+    property color buttonTextColor: "white"
+    property string iconSourcePrefix
+    property string iconSourceSuffix
 
-    property int paddingSmall: Math.max(height/160,3)
-    property int paddingMedium: Math.max(height/80,2)
-    property int paddingLarge: Math.max(height/40,1)
-
-    property int gap: paddingLarge + paddingSmall
+    readonly property int buttonSize: height/8
+    readonly property int paddingSmall: Math.max(height/160,3)
+    readonly property int paddingMedium: Math.max(height/80,2)
+    readonly property int paddingLarge: Math.max(height/40,1)
+    readonly property int gap: paddingLarge + paddingSmall
 
     signal textCopied(var text)
     signal buttonPressed()
@@ -83,6 +85,8 @@ Item {
         Backspace {
             id: backspace
             width: buttonSize/2
+            iconSourcePrefix: calculator.iconSourcePrefix
+            iconSourceSuffix: calculator.iconSourceSuffix
             anchors {
                 top: parent.top
                 bottom: parent.bottom
@@ -115,6 +119,7 @@ Item {
         Row {
             spacing: gap
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "C"
                 onPressed: {
@@ -124,6 +129,7 @@ Item {
             }
             CalcButton {
                 id: divideButton
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: OP_DIVIDE
                 onPressed: {
@@ -134,6 +140,7 @@ Item {
             }
             CalcButton {
                 id: multiplyButton
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: OP_MULTIPLY
                 onPressed: {
@@ -147,6 +154,7 @@ Item {
             spacing: gap
             height: buttonSize + gap
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "\u00b1"
                 onPressed: {
@@ -156,6 +164,7 @@ Item {
             }
             CalcButton {
                 id: minusButton
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: OP_MINUS
                 onPressed: {
@@ -166,6 +175,7 @@ Item {
             }
             CalcButton {
                 id: plusButton
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: OP_PLUS
                 onPressed: {
@@ -178,6 +188,7 @@ Item {
         Row {
             spacing: gap
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "7"
                 onPressed: {
@@ -186,6 +197,7 @@ Item {
                 }
             }
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "8"
                 onPressed: {
@@ -194,6 +206,7 @@ Item {
                 }
             }
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "9"
                 onPressed: {
@@ -205,6 +218,7 @@ Item {
         Row {
             spacing: gap
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "4"
                 onPressed: {
@@ -213,6 +227,7 @@ Item {
                 }
             }
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "5"
                 onPressed: {
@@ -221,6 +236,7 @@ Item {
                 }
             }
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "6"
                 onPressed: {
@@ -232,6 +248,7 @@ Item {
         Row {
             spacing: gap
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "1"
                 onPressed: {
@@ -240,6 +257,7 @@ Item {
                 }
             }
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "2"
                 onPressed: {
@@ -248,6 +266,7 @@ Item {
                 }
             }
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "3"
                 onPressed: {
@@ -259,6 +278,7 @@ Item {
         Row {
             spacing: gap
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: "0"
                 onPressed: {
@@ -267,6 +287,7 @@ Item {
                 }
             }
             CalcButton {
+                normalColor: buttonTextColor
                 width: buttonSize
                 text: Qt.locale().decimalPoint
                 onPressed: {
