@@ -3,7 +3,6 @@ PREFIX = harbour
 TARGET = $${PREFIX}-$${NAME}
 CONFIG += sailfishapp
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-psabi
-QT += svg
 LIBS += -ldl
 
 CONFIG(debug, debug|release) {
