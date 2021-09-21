@@ -9,6 +9,8 @@ CONFIG(debug, debug|release) {
     DEFINES += HARBOUR_DEBUG=1
 }
 
+TARGET_DATA_DIR = /usr/share/$${TARGET}
+
 SOURCES += \
     src/main.cpp \
     src/CalcEngine.cpp \
@@ -16,8 +18,8 @@ SOURCES += \
 
 SOURCES += \
     harbour-lib/src/HarbourJson.cpp \
+    harbour-lib/src/HarbourSystem.cpp \
     harbour-lib/src/HarbourTheme.cpp \
-    harbour-lib/src/HarbourImageProvider.cpp
 
 HEADERS += \
     src/CalcEngine.h \
@@ -26,13 +28,17 @@ HEADERS += \
 HEADERS += \
     harbour-lib/include/HarbourDebug.h \
     harbour-lib/include/HarbourJson.h \
-    harbour-lib/include/HarbourImageProvider.h \
+    harbour-lib/include/HarbourSystem.h \
     harbour-lib/include/HarbourTheme.h
 
 INCLUDEPATH += \
     harbour-lib/include
 
+HARBOUR_QML_COMPONENTS = \
+    harbour-lib/qml/HarbourHighlightIcon.qml
+
 OTHER_FILES += \
+    $${HARBOUR_QML_COMPONENTS} \
     qml/*.qml \
     qml/*.svg \
     translations/*.ts \
@@ -41,6 +47,11 @@ OTHER_FILES += \
     *.desktop \
     rpm/harbour-meecalc.changes \
     rpm/harbour-meecalc.spec
+
+
+harbour_qml_components.files = $${HARBOUR_QML_COMPONENTS}
+harbour_qml_components.path = $${TARGET_DATA_DIR}/qml/harbour
+INSTALLS += harbour_qml_components
 
 # Icons
 ICON_SIZES = 86 108 128 256

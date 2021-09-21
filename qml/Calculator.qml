@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2018 Jolla Ltd.
- * Copyright (C) 2014-2018 Slava Monich <slava.monich@jolla.com>
+ * Copyright (C) 2014-2021 Jolla Ltd.
+ * Copyright (C) 2014-2021 Slava Monich <slava.monich@jolla.com>
  *
  * You may use this file under the terms of BSD license as follows:
  *
@@ -11,8 +11,8 @@
  *   1. Redistributions of source code must retain the above copyright
  *      notice, this list of conditions and the following disclaimer.
  *   2. Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in
- *      the documentation and/or other materials provided with the
+ *      notice, this list of conditions and the following disclaimer
+ *      in the documentation and/or other materials provided with the
  *      distribution.
  *   3. Neither the names of the copyright holders nor the names of its
  *      contributors may be used to endorse or promote products derived
@@ -36,17 +36,17 @@ import Sailfish.Silica 1.0
 
 Item {
     id: calculator
+
     implicitWidth: buttons.width
 
     property var engine
-    property color buttonTextColor: "white"
-    property string iconSourcePrefix
-    property string iconSourceSuffix
+    property color foregroundColor: "white"
 
-    readonly property int buttonSize: height/8
-    readonly property int paddingSmall: Math.max(height/160,3)
-    readonly property int paddingMedium: Math.max(height/80,2)
-    readonly property int paddingLarge: Math.max(height/40,1)
+    readonly property int buttonSize: Math.floor(height/8)
+    readonly property int sizeTiny: Math.max(Math.floor(height/1024),1)
+    readonly property int paddingSmall: Math.max(Math.floor(height/160),2)
+    readonly property int paddingMedium: Math.max(Math.floor(height/80),4)
+    readonly property int paddingLarge: Math.max(Math.floor(height/40),8)
     readonly property int gap: paddingLarge + paddingSmall
 
     signal textCopied(var text)
@@ -85,8 +85,7 @@ Item {
         Backspace {
             id: backspace
             width: buttonSize/2
-            iconSourcePrefix: calculator.iconSourcePrefix
-            iconSourceSuffix: calculator.iconSourceSuffix
+            foregroundColor: calculator.foregroundColor
             anchors {
                 top: parent.top
                 bottom: parent.bottom
@@ -108,18 +107,26 @@ Item {
             bottom: parent.bottom
         }
 
-        Image {
-            height: sourceSize.height
+        Rectangle {
             width: parent.width - 2*paddingSmall
+            height: sizeTiny * 2
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "meecalc-separator-background.svg"
-            fillMode: Image.TileHorizontally
+            color: foregroundColor
+            opacity: 0.2
+
+            Rectangle {
+                y: sizeTiny
+                width: parent.width
+                height: sizeTiny
+                color: foregroundColor
+                opacity: 0.6
+            }
         }
 
         Row {
             spacing: gap
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "C"
                 onPressed: {
@@ -129,7 +136,7 @@ Item {
             }
             CalcButton {
                 id: divideButton
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: OP_DIVIDE
                 onPressed: {
@@ -140,7 +147,7 @@ Item {
             }
             CalcButton {
                 id: multiplyButton
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: OP_MULTIPLY
                 onPressed: {
@@ -154,7 +161,7 @@ Item {
             spacing: gap
             height: buttonSize + gap
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "\u00b1"
                 onPressed: {
@@ -164,7 +171,7 @@ Item {
             }
             CalcButton {
                 id: minusButton
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: OP_MINUS
                 onPressed: {
@@ -175,7 +182,7 @@ Item {
             }
             CalcButton {
                 id: plusButton
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: OP_PLUS
                 onPressed: {
@@ -188,7 +195,7 @@ Item {
         Row {
             spacing: gap
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "7"
                 onPressed: {
@@ -197,7 +204,7 @@ Item {
                 }
             }
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "8"
                 onPressed: {
@@ -206,7 +213,7 @@ Item {
                 }
             }
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "9"
                 onPressed: {
@@ -218,7 +225,7 @@ Item {
         Row {
             spacing: gap
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "4"
                 onPressed: {
@@ -227,7 +234,7 @@ Item {
                 }
             }
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "5"
                 onPressed: {
@@ -236,7 +243,7 @@ Item {
                 }
             }
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "6"
                 onPressed: {
@@ -248,7 +255,7 @@ Item {
         Row {
             spacing: gap
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "1"
                 onPressed: {
@@ -257,7 +264,7 @@ Item {
                 }
             }
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "2"
                 onPressed: {
@@ -266,7 +273,7 @@ Item {
                 }
             }
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "3"
                 onPressed: {
@@ -278,7 +285,7 @@ Item {
         Row {
             spacing: gap
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: "0"
                 onPressed: {
@@ -287,7 +294,7 @@ Item {
                 }
             }
             CalcButton {
-                normalColor: buttonTextColor
+                normalColor: foregroundColor
                 width: buttonSize
                 text: Qt.locale().decimalPoint
                 onPressed: {

@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2018 Jolla Ltd.
- * Copyright (C) 2014-2018 Slava Monich <slava.monich@jolla.com>
+ * Copyright (C) 2014-2021 Jolla Ltd.
+ * Copyright (C) 2014-2021 Slava Monich <slava.monich@jolla.com>
  *
  * You may use this file under the terms of BSD license as follows:
  *
@@ -11,8 +11,8 @@
  *   1. Redistributions of source code must retain the above copyright
  *      notice, this list of conditions and the following disclaimer.
  *   2. Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in
- *      the documentation and/or other materials provided with the
+ *      notice, this list of conditions and the following disclaimer
+ *      in the documentation and/or other materials provided with the
  *      distribution.
  *   3. Neither the names of the copyright holders nor the names of its
  *      contributors may be used to endorse or promote products derived
@@ -34,7 +34,6 @@
 #include "CalcEngine.h"
 #include "CalcState.h"
 
-#include "HarbourImageProvider.h"
 #include "HarbourTheme.h"
 
 #include <sailfishapp.h>
@@ -45,12 +44,17 @@
 
 #define MEECALC_APP "harbour-meecalc"
 
+static void register_types(const char* uri, int v1 = 1, int v2 = 0)
+{
+    qmlRegisterType<CalcEngine>(uri, 1, 0, "CalcEngine");
+    qmlRegisterSingletonType<HarbourTheme>(uri, v1, v2, "HarbourTheme", HarbourTheme::createSingleton);
+}
+
 int main(int argc, char *argv[])
 {
     QGuiApplication* app = SailfishApp::application(argc, argv);
 
-    qmlRegisterType<CalcEngine>("harbour.meecalc", 1, 0, "CalcEngine");
-
+    register_types("harbour.meecalc");
     QString statePath(QStandardPaths::writableLocation(
          QStandardPaths::GenericDataLocation) +
          QStringLiteral("/" MEECALC_APP "/") +
@@ -75,13 +79,8 @@ int main(int argc, char *argv[])
     }
 
     QQuickView* view = SailfishApp::createView();
-    QQmlEngine* engine = view->engine();
-    QString imageProvider("meecalc");
-    engine->addImageProvider(imageProvider, new HarbourImageProvider);
-
     QQmlContext* root = view->rootContext();
-    root->setContextProperty("ImageProvider", imageProvider);
-    root->setContextProperty("HarbourTheme", new HarbourTheme(app));
+
     root->setContextProperty("OP_MULTIPLY", CalcEngine::OP_MULTIPLY);
     root->setContextProperty("OP_DIVIDE", CalcEngine::OP_DIVIDE);
     root->setContextProperty("OP_MINUS", CalcEngine::OP_MINUS);

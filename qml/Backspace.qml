@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2018 Jolla Ltd.
- * Copyright (C) 2014-2018 Slava Monich <slava.monich@jolla.com>
+ * Copyright (C) 2014-2021 Jolla Ltd.
+ * Copyright (C) 2014-2021 Slava Monich <slava.monich@jolla.com>
  *
  * You may use this file under the terms of BSD license as follows:
  *
@@ -11,8 +11,8 @@
  *   1. Redistributions of source code must retain the above copyright
  *      notice, this list of conditions and the following disclaimer.
  *   2. Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in
- *      the documentation and/or other materials provided with the
+ *      notice, this list of conditions and the following disclaimer
+ *      in the documentation and/or other materials provided with the
  *      distribution.
  *   3. Neither the names of the copyright holders nor the names of its
  *      contributors may be used to endorse or promote products derived
@@ -34,10 +34,13 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
+import "harbour"
+
 MouseArea {
     id: button
-    property string iconSourcePrefix
-    property string iconSourceSuffix
+
+    property alias foregroundColor: image.highlightColor
+
     signal repeat()
 
     onPressedChanged: {
@@ -49,13 +52,14 @@ MouseArea {
         }
     }
 
-    Image {
+    HarbourHighlightIcon {
         id: image
+
         anchors.centerIn: parent
         width: parent.width
         sourceSize.width: parent.width
         fillMode: Image.PreserveAspectFit
-        source: iconSourcePrefix + Qt.resolvedUrl("meecalc-backspace.svg") + iconSourceSuffix
+        source: Qt.resolvedUrl("meecalc-backspace.svg")
         smooth: true
     }
 
