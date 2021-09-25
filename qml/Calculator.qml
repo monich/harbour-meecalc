@@ -37,27 +37,20 @@ import Sailfish.Silica 1.0
 Item {
     id: calculator
 
-    implicitWidth: buttons.width
+    implicitWidth: 3 * buttonSize + 2 + Theme.paddingSmall
 
     property var engine
     property color foregroundColor: "white"
 
     readonly property int buttonSize: Math.floor(height/8)
     readonly property int sizeTiny: Math.max(Math.floor(height/1024),1)
-    readonly property int paddingSmall: Math.max(Math.floor(height/160),2)
-    readonly property int paddingMedium: Math.max(Math.floor(height/80),4)
-    readonly property int paddingLarge: Math.max(Math.floor(height/40),8)
-    readonly property int gap: paddingLarge + paddingSmall
 
     signal textCopied(var text)
     signal buttonPressed()
 
     Connections {
         target: engine
-        onOops: {
-            console.log("oops")
-            display.flash()
-        }
+        onOops: display.flash()
     }
 
     Item {
@@ -66,7 +59,6 @@ Item {
             bottom: buttons.top
             left: parent.left
             right: parent.right
-            bottomMargin: paddingSmall
         }
 
         Display {
@@ -77,11 +69,12 @@ Item {
                 bottom: parent.bottom
                 left: parent.left
                 right: backspace.left
-                rightMargin: paddingLarge
+                rightMargin: Theme.paddingLarge
             }
             onTextCopied: calculator.textCopied(text)
             onPressed: calculator.buttonPressed()
         }
+
         Backspace {
             id: backspace
             width: buttonSize/2
@@ -101,14 +94,16 @@ Item {
 
     Column {
         id: buttons
-        spacing: paddingSmall
+
+        spacing: Theme.paddingSmall
+        width: parent.width
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
         }
 
         Rectangle {
-            width: parent.width - 2*paddingSmall
+            width: parent.width
             height: sizeTiny * 2
             anchors.horizontalCenter: parent.horizontalCenter
             color: foregroundColor
@@ -123,8 +118,13 @@ Item {
             }
         }
 
-        Row {
-            spacing: gap
+        Grid {
+            rows: 6
+            columns: 3
+            rowSpacing: Math.min((calculator.height - (rows + 1) * buttonSize) / (rows + 2))
+            columnSpacing: Math.min((calculator.width - columns * buttonSize) / (columns + 1))
+            x: columnSpacing
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -134,8 +134,8 @@ Item {
                     calculator.buttonPressed()
                 }
             }
+
             CalcButton {
-                id: divideButton
                 normalColor: foregroundColor
                 width: buttonSize
                 text: OP_DIVIDE
@@ -145,8 +145,8 @@ Item {
                 }
                 selected: engine.selectedOp === text
             }
+
             CalcButton {
-                id: multiplyButton
                 normalColor: foregroundColor
                 width: buttonSize
                 text: OP_MULTIPLY
@@ -156,10 +156,9 @@ Item {
                 }
                 selected: engine.selectedOp === text
             }
-        }
-        Row {
-            spacing: gap
-            height: buttonSize + gap
+
+            // -------------------------------------
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -169,8 +168,8 @@ Item {
                     calculator.buttonPressed()
                 }
             }
+
             CalcButton {
-                id: minusButton
                 normalColor: foregroundColor
                 width: buttonSize
                 text: OP_MINUS
@@ -180,8 +179,8 @@ Item {
                 }
                 selected: engine.selectedOp === text
             }
+
             CalcButton {
-                id: plusButton
                 normalColor: foregroundColor
                 width: buttonSize
                 text: OP_PLUS
@@ -191,9 +190,9 @@ Item {
                 }
                 selected: engine.selectedOp === text
             }
-        }
-        Row {
-            spacing: gap
+
+            // -------------------------------------
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -203,6 +202,7 @@ Item {
                     calculator.buttonPressed()
                 }
             }
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -212,6 +212,7 @@ Item {
                     calculator.buttonPressed()
                 }
             }
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -221,9 +222,9 @@ Item {
                     calculator.buttonPressed()
                 }
             }
-        }
-        Row {
-            spacing: gap
+
+            // -------------------------------------
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -233,7 +234,10 @@ Item {
                     calculator.buttonPressed()
                 }
             }
+
             CalcButton {
+                id: digit5
+
                 normalColor: foregroundColor
                 width: buttonSize
                 text: "5"
@@ -242,6 +246,7 @@ Item {
                     calculator.buttonPressed()
                 }
             }
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -251,9 +256,9 @@ Item {
                     calculator.buttonPressed()
                 }
             }
-        }
-        Row {
-            spacing: gap
+
+            // -------------------------------------
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -263,6 +268,7 @@ Item {
                     calculator.buttonPressed()
                 }
             }
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -272,6 +278,7 @@ Item {
                     calculator.buttonPressed()
                 }
             }
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -281,9 +288,9 @@ Item {
                     calculator.buttonPressed()
                 }
             }
-        }
-        Row {
-            spacing: gap
+
+            // -------------------------------------
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -293,6 +300,7 @@ Item {
                     calculator.buttonPressed()
                 }
             }
+
             CalcButton {
                 normalColor: foregroundColor
                 width: buttonSize
@@ -302,6 +310,7 @@ Item {
                     calculator.buttonPressed()
                 }
             }
+
             CalcButton {
                 width: buttonSize
                 text: "="

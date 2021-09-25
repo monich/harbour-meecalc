@@ -42,28 +42,28 @@ Page {
         anchors.fill: parent
         color: "black"
     }
+
     Notification {
         id: notification
-    }
-    Calculator {
-        id: calculator
-        anchors.centerIn: parent
-        height: parent.height - 2*Theme.paddingLarge
-        onTextCopied: {
-            notification.close()
-            //: Shown when display text has been copied to clipboard
-            //% "Copied to clipboard"
-            notification.previewBody = qsTrId("calculator-notification-text_copied")
+
+        //: Shown when display text has been copied to clipboard
+        //% "Copied to clipboard"
+        previewBody: qsTrId("calculator-notification-text_copied")
+        Component.onCompleted: {
             if ("icon" in notification) {
                 notification.icon = "icon-s-clipboard"
             }
-            notification.publish()
-        }
-        onButtonPressed: {
-            notification.close()
         }
     }
-    function oops() {
-        calculator.oops()
+
+    Calculator {
+        id: calculator
+
+        x: Theme.paddingLarge
+        y: Theme.paddingLarge
+        width: parent.width - 2 * x
+        height: parent.height - 2 * y
+        onTextCopied: notification.publish()
+        onButtonPressed: notification.close()
     }
 }

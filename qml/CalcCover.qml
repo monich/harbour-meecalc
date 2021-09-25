@@ -39,6 +39,7 @@ CoverBackground {
         engine: Engine
         foregroundColor: Theme.primaryColor
         anchors.centerIn: parent
-        height: parent.height*19/20
+        height: parent.height - 2 * Theme.paddingLarge
+        width: parent.width - 2 * Theme.paddingLarge
     }
 }
