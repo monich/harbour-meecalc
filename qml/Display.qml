@@ -34,7 +34,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Item {
+MouseArea {
     id: display
 
     property alias text: displayText.text
@@ -51,6 +51,7 @@ Item {
 
     Rectangle {
         id: background
+
         anchors {
             left: parent.left
             right: parent.right
@@ -80,6 +81,7 @@ Item {
 
     SequentialAnimation{
         id: flashAnimation
+
         ParallelAnimation {
             ColorAnimation {
                 target: displayText
@@ -116,15 +118,10 @@ Item {
         }
     }
 
-    MouseArea {
-        anchors.fill: parent
-        onPressed: display.pressed()
-        onPressAndHold: {
-            if (displayText.text != "0") {
-                Clipboard.text = text
-                display.textCopied(displayText.text)
-                display.flash()
-            }
-        }
+    onPressed: display.pressed()
+    onPressAndHold: {
+        Clipboard.text = text
+        display.textCopied(displayText.text)
+        display.flash()
     }
 }
