@@ -32,15 +32,17 @@
  */
 
 import QtQuick 2.0
+import QtFeedback 5.0
 import Sailfish.Silica 1.0
 import org.nemomobile.notifications 1.0
 
 Page {
     property alias engine: calculator.engine
 
-    Rectangle {
-        anchors.fill: parent
-        color: "black"
+    ThemeEffect {
+        id: buzz
+
+        effect: ThemeEffect.Press
     }
 
     Notification {
@@ -56,6 +58,11 @@ Page {
         }
     }
 
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+    }
+
     Calculator {
         id: calculator
 
@@ -63,7 +70,13 @@ Page {
         y: Theme.paddingLarge
         width: parent.width - 2 * x
         height: parent.height - 2 * y
-        onTextCopied: notification.publish()
-        onButtonPressed: notification.close()
+        onTextCopied: {
+            notification.publish()
+            buzz.play()
+        }
+        onButtonPressed: {
+            notification.close()
+            buzz.play()
+        }
     }
 }
