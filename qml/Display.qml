@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014-2018 Jolla Ltd.
- * Copyright (C) 2014-2018 Slava Monich <slava.monich@jolla.com>
+ * Copyright (C) 2014-2021 Jolla Ltd.
+ * Copyright (C) 2014-2021 Slava Monich <slava.monich@jolla.com>
  *
  * You may use this file under the terms of BSD license as follows:
  *
@@ -11,8 +11,8 @@
  *   1. Redistributions of source code must retain the above copyright
  *      notice, this list of conditions and the following disclaimer.
  *   2. Redistributions in binary form must reproduce the above copyright
- *      notice, this list of conditions and the following disclaimer in
- *      the documentation and/or other materials provided with the
+ *      notice, this list of conditions and the following disclaimer
+ *      in the documentation and/or other materials provided with the
  *      distribution.
  *   3. Neither the names of the copyright holders nor the names of its
  *      contributors may be used to endorse or promote products derived
@@ -65,37 +65,17 @@ Item {
 
     Text {
         id: displayText
+
         color: textColor
         anchors.fill: parent
-
-        smooth: true
-        font.bold: true
-
-        Component.onCompleted: refitText()
+        font {
+            bold: true
+            pixelSize: parent.height - 2 * Theme.paddingSmall
+        }
+        fontSizeMode: Text.Fit
+        minimumPixelSize: Theme.fontSizeTiny
         horizontalAlignment: Text.AlignRight;
         verticalAlignment: Text.AlignVCenter;
-
-        onWidthChanged: refitText()
-        onHeightChanged: refitText()
-        onTextChanged: refitText()
-
-        function refitText() {
-            if (paintedHeight > 0 && paintedWidth > 0) {
-                if (font.pixelSize % 2) font.pixelSize++
-                while (paintedWidth > width || paintedHeight > height) {
-                    if ((font.pixelSize -= 2) <= minimumSize)
-                        break
-                }
-                while (paintedWidth < width && paintedHeight < height) {
-                    font.pixelSize += 2
-                }
-                font.pixelSize -= 2
-                if (font.pixelSize >= maximumSize) {
-                    font.pixelSize = maximumSize
-                    return
-                }
-            }
-        }
     }
 
     SequentialAnimation{
