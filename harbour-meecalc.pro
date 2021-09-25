@@ -17,9 +17,7 @@ SOURCES += \
     src/CalcState.cpp
 
 SOURCES += \
-    harbour-lib/src/HarbourJson.cpp \
-    harbour-lib/src/HarbourSystem.cpp \
-    harbour-lib/src/HarbourTheme.cpp \
+    harbour-lib/src/HarbourJson.cpp
 
 HEADERS += \
     src/CalcEngine.h \
@@ -27,9 +25,7 @@ HEADERS += \
 
 HEADERS += \
     harbour-lib/include/HarbourDebug.h \
-    harbour-lib/include/HarbourJson.h \
-    harbour-lib/include/HarbourSystem.h \
-    harbour-lib/include/HarbourTheme.h
+    harbour-lib/include/HarbourJson.h
 
 INCLUDEPATH += \
     harbour-lib/include

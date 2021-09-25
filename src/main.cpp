@@ -34,8 +34,6 @@
 #include "CalcEngine.h"
 #include "CalcState.h"
 
-#include "HarbourTheme.h"
-
 #include <sailfishapp.h>
 
 #include <QtGui>
@@ -44,17 +42,10 @@
 
 #define MEECALC_APP "harbour-meecalc"
 
-static void register_types(const char* uri, int v1 = 1, int v2 = 0)
-{
-    qmlRegisterType<CalcEngine>(uri, 1, 0, "CalcEngine");
-    qmlRegisterSingletonType<HarbourTheme>(uri, v1, v2, "HarbourTheme", HarbourTheme::createSingleton);
-}
-
 int main(int argc, char *argv[])
 {
     QGuiApplication* app = SailfishApp::application(argc, argv);
 
-    register_types("harbour.meecalc");
     QString statePath(QStandardPaths::writableLocation(
          QStandardPaths::GenericDataLocation) +
          QStringLiteral("/" MEECALC_APP "/") +
