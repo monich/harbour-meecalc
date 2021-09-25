@@ -1,3 +1,10 @@
+* Sat Sep 25 2021 Slava Monich <slava.monich@jolla.com> 1.0.9
+- Added 172x172 icon
+- Improved layout
+- Removed dependency on Qt5Svg
+- Dropped unnecessary native components
+- Added haptic feedback
+
 * Tue Dec 11 2018 Slava Monich <slava.monich@jolla.com> 1.0.8
 - Use notification icon when available
 - Adapted cover page to light ambiences in Sailfish 3.0
