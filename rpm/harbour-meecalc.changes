@@ -1,3 +1,8 @@
+* Sun Feb 12 2023 Slava Monich <slava@monich.com> 1.0.10
+- Declared Sailjail permissions
+- Added state file to MyBackup
+- Added Chum metadata
+
 * Sat Sep 25 2021 Slava Monich <slava.monich@jolla.com> 1.0.9
 - Added 172x172 icon
 - Improved layout
