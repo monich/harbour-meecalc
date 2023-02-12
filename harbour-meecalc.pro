@@ -41,6 +41,7 @@ OTHER_FILES += \
     icons/*.svg \
     *.md \
     *.desktop \
+    LICENSE \
     rpm/harbour-meecalc.changes \
     rpm/harbour-meecalc.spec
 
