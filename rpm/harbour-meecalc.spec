@@ -25,6 +25,14 @@ BuildRequires: desktop-file-utils
 %description
 N9 style calculator
 
+%if "%{?vendor}" == "chum"
+Categories:
+ - Office
+Icon: https://raw.githubusercontent.com/monich/harbour-meecalc/master/icons/harbour-meecalc.svg
+Screenshots:
+- https://home.monich.net/chum/harbour-meecalc/screenshots/screenshot-001.png
+%endif
+
 %prep
 %setup -q -n %{name}-%{version}
 
