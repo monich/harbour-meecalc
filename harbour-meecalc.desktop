@@ -5,3 +5,9 @@ X-Nemo-Application-Type=silica-qt5
 Name=MeeCalc
 Icon=harbour-meecalc
 Exec=harbour-meecalc
+
+[X-HarbourBackup]
+BackupPathList = .local/share/harbour-meecalc/
+
+[X-Sailjail]
+Permissions=
