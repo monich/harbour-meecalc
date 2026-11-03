@@ -1,108 +1,25 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   version="1.1"
-   x="0px"
-   y="0px"
-   width="86px"
-   height="86px"
-   viewBox="0 0 86 86"
-   enable-background="new 0 0 86 86"
-   xml:space="preserve"
-   sodipodi:docname="harbour-meecalc.svg"
-   inkscape:export-filename="harbour-meecalc.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<svg version="1.1" width="86px" height="86px" viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient
-        id="linearGradient8305"
-        spreadMethod="pad"
-        gradientTransform="matrix(0,-21.095261,-21.095261,0,461.10156,174.82715)"
-        gradientUnits="userSpaceOnUse"
-        y2="0"
-        x2="1"
-        y1="0"
-        x1="0">
-      <stop
-          offset="0"
-          style="stop-opacity:1;stop-color:#f6f9ec"/>
-      <stop
-          offset="1"
-          style="stop-opacity:1;stop-color:#d0c9c3"/>
+    <linearGradient id="linearGradient1" x1="64" y1="64" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" style="stop-color:#dc6a00"/>
+      <stop offset="1" style="stop-color:#f3cb00"/>
     </linearGradient>
-    <linearGradient
-        y2="0"
-        x2="1"
-        y1="0"
-        x1="0"
-        spreadMethod="pad"
-        gradientTransform="matrix(0,26.369076,-26.369076,0,43.000075,30.804812)"
-        gradientUnits="userSpaceOnUse"
-        id="linearGradient23420"
-        xlink:href="#linearGradient8305"
-        inkscape:collect="always"/>
-    <filter
-        id="filter3017"
-        inkscape:label="Drop shadow"
-        width="1.5"
-        height="1.5"
-        x="-.25"
-        y="-.25">
-      <feGaussianBlur
-          in="SourceAlpha"
-          stdDeviation="2"
-          result="blur"/>
-      <feColorMatrix
-          result="bluralpha"
-          type="matrix"
-          values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0 "/>
-      <feOffset
-          in="bluralpha"
-          dx="2"
-          dy="2"
-          result="offsetBlur"/>
+    <linearGradient id="linearGradient2" y2="57.08" x2="43" y1="31.42" x1="43" spreadMethod="pad" gradientUnits="userSpaceOnUse">
+      <stop offset="0" style="stop-color:#f6f9ec"/>
+      <stop offset="1" style="stop-color:#d0c9c3"/>
+    </linearGradient>
+    <filter id="filter1" width="1.24" height="1.41" x="-0.1" y="-0.17">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+      <feColorMatrix result="bluralpha" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0"/>
+      <feOffset in="bluralpha" dx="2" dy="2" result="offsetBlur"/>
       <feMerge>
-        <feMergeNode
-            in="offsetBlur"/>
-        <feMergeNode
-            in="SourceGraphic"/>
+        <feMergeNode in="offsetBlur"/>
+        <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
   </defs>
-  <rect
-      y="0"
-      x="0"
-      style="opacity:0;fill:#ffffff"
-      width="86"
-      height="86"/>
-  <g
-      id="Layer_1"
-      transform="matrix(-1,0,0,1,86,0)">
-    <linearGradient
-        id="SVGID_1_"
-        gradientUnits="userSpaceOnUse"
-        x1="22.490395"
-        y1="63.509602"
-        x2="85.798447"
-        y2="0.20155098">
-      <stop
-          offset="0"
-          style="stop-color:#dc6a00;stop-opacity:1;"/>
-      <stop
-          offset="1"
-          style="stop-color:#f3cb00;stop-opacity:1;"/>
-    </linearGradient>
-    <path
-        d="M 84.277,0.3 H 43 C 19.417,0.3 0.3,19.418 0.3,43 v 41.277 c 0,0.786 0.637,1.423 1.423,1.423 H 43 C 66.583,85.7 85.7,66.582 85.7,43 V 1.723 C 85.7,0.937 85.063,0.3 84.277,0.3 z"
-        style="fill:url(#SVGID_1_)"
-      inkscape:connector-curvature="0"/>
-  </g>
-  <path
-      style="fill:url(#linearGradient23420);stroke:none;filter:url(#filter3017)"
-      d="m 21.344375,28.92375 c -1.19125,0 -2.16625,0.975 -2.16625,2.16875 l 0,0 0,5.41125 c 0,1.19 0.975,2.16625 2.16625,2.16625 l 0,0 43.3125,0 c 1.19125,0 2.165,-0.97625 2.165,-2.16625 l 0,0 0,-5.41125 c 0,-1.19375 -0.97375,-2.16875 -2.165,-2.16875 l 0,0 -43.3125,0 z m 0,18.4075 c -1.19125,0 -2.16625,0.975 -2.16625,2.16625 l 0,0 0,5.41375 c 0,1.19125 0.975,2.165 2.16625,2.165 l 0,0 43.3125,0 c 1.19125,0 2.165,-0.97375 2.165,-2.165 l 0,0 0,-5.41375 c 0,-1.19125 -0.97375,-2.16625 -2.165,-2.16625 l 0,0 -43.3125,0 z"
-      inkscape:connector-curvature="0"/>
+  <rect style="fill:none;opacity:0" width="86" height="86"/>
+  <path style="fill:url(#linearGradient1)" d="M 1.72 0.3 H 43 c 23.58 0 42.7 19.12 42.7 42.7 v 41.28 c 0 0.79 -0.64 1.42 -1.42 1.42 H 43 C 19.42 85.7 0.3 66.58 0.3 43 V 1.72 C 0.3 0.94 0.94 0.3 1.72 0.3 z"/>
+  <path style="fill:url(#linearGradient2);stroke:none;filter:url(#filter1)" d="m 21.34 28.92 c -1.19 0 -2.16 0.97 -2.16 2.17 v 5.41 c 0 1.19 0.96 2.17 2.16 2.17 h 43.31 c 1.19 0 2.17 -0.98 2.17 -2.17 v -5.41 c 0 -1.19 -0.97 -2.17 -2.17 -2.17 z m 0 18.41 c -1.19 0 -2.16 0.97 -2.16 2.17 v 5.41 c 0 1.19 0.96 2.17 2.16 2.17 h 43.31 c 1.19 0 2.17 -0.97 2.17 -2.17 V 49.5 c 0 -1.19 -0.97 -2.17 -2.17 -2.17 z"/>
 </svg>
